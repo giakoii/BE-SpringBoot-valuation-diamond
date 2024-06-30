@@ -1,0 +1,63 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: jdbc:sqlserver://database.techtheworld.id.vn:1433;encrypt=true;trustServerCertificate=true;databaseName=diamond_valuation_db
+      username: valuationdiamond
+      password: 6CB754DB-FE43-478F-BB09-C4B0E5406A2C
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    secondary:
+      jdbc-url: jdbc:sqlserver://database.techtheworld.id.vn:1433;encrypt=true;trustServerCertificate=true;databaseName=diamond_valuation_db2
+      username: valuationdiamond
+      password: 6CB754DB-FE43-478F-BB09-C4B0E5406A2C
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  application:
+    name: valuationdiamond
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: giakhoi060708@gmail.com
+    password: pqho vqrn nhco pbiz
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+#    url: jdbc:mysql://root:eScJWhrtZQvmdjnsjTnSsFiWXqEwXjFY@viaduct.proxy.rlwy.net:13265/diamond_valuation_db
+#    username: root
+#    password: eScJWhrtZQvmdjnsjTnSsFiWXqEwXjFY
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        format_sql: true
+        use_sql_comments: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    defer-datasource-initialization: true
+  jackson:
+    date-format = yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+server:
+    port: 80
+frontend:
+  url: http://localhost:5173/
+
+
+#
+  #
+  ##              google:
+  ##                authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+  ##                token-uri: https://oauth2.googleapis.com/token
+  ##                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+  ##                user-name-attribute: sub
