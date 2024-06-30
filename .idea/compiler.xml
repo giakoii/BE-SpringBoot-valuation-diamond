@@ -19,11 +19,13 @@
         </processorPath>
         <module name="valuationdiamond" />
         <module name="BE-SWP391" />
+        <module name="BE-FINAL" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BE-FINAL" options="-parameters -parameters" />
       <module name="BE-SWP391" options="-parameters -parameters" />
       <module name="valuationdiamond" options="-parameters -parameters" />
     </option>

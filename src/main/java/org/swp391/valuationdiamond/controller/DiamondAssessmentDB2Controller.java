@@ -20,7 +20,7 @@ public class DiamondAssessmentDB2Controller {
 
     @GetMapping("/search")
     public List<DiamondAssessmentDB2> searchDiamonds(
-            @RequestParam(required = false) BigDecimal assessMeasurement,
+            @RequestParam(required = false) BigDecimal assessCarat,
             @RequestParam(required = false) String assessShapeCut,
             @RequestParam(required = false) String assessCut,
             @RequestParam(required = false) String fluorescence,
@@ -33,7 +33,7 @@ public class DiamondAssessmentDB2Controller {
             @RequestParam(required = false) BigDecimal priceMax) {
 
         return diamondAssessmentServiceDB2.findSimilarDiamonds(
-                assessMeasurement, assessShapeCut, assessCut, fluorescence, symmetry,
+                assessCarat, assessShapeCut, assessCut, fluorescence, symmetry,
                 assessColor, assessClarity, assessOrigin, proportions, priceMin, priceMax);
     }
 }

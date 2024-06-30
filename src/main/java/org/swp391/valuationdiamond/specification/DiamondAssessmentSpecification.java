@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 
 public class DiamondAssessmentSpecification {
 
-    public static Specification<DiamondAssessmentDB2> hasAssessMeasurement(BigDecimal assessMeasurement) {
-        return (root, query, cb) -> assessMeasurement == null ? null : cb.equal(root.get("assessMeasurement"), assessMeasurement);
+    public static Specification<DiamondAssessmentDB2> HasAssessCarat(BigDecimal assessCarat) {
+        return (root, query, cb) -> assessCarat == null ? null : cb.equal(root.get("assessCarat"), assessCarat);
     }
 
     public static Specification<DiamondAssessmentDB2> hasAssessShapeCut(String assessShapeCut) {
@@ -62,11 +62,11 @@ public class DiamondAssessmentSpecification {
             if (caratMin == null && caratMax == null) {
                 return null;
             } else if (caratMin != null && caratMax != null) {
-                return cb.between(root.get("assessMeasurement"), caratMin, caratMax);
+                return cb.between(root.get("assessCarat"), caratMin, caratMax);
             } else if (caratMin != null) {
-                return cb.greaterThanOrEqualTo(root.get("assessMeasurement"), caratMin);
+                return cb.greaterThanOrEqualTo(root.get("assessCarat"), caratMin);
             } else {
-                return cb.lessThanOrEqualTo(root.get("assessMeasurement"), caratMax);
+                return cb.lessThanOrEqualTo(root.get("assessCarat"), caratMax);
             }
         };
     }

@@ -16,16 +16,16 @@ public class DiamondAssessmentServiceDB2 {
     @Autowired
     private DiamondAssessmentDB2Repository diamondAssessmentDB2Repository;
 
-    public List<DiamondAssessmentDB2> findSimilarDiamonds(BigDecimal assessMeasurement, String assessShapeCut, String assessCut,
+    public List<DiamondAssessmentDB2> findSimilarDiamonds(BigDecimal assessCarat, String assessShapeCut, String assessCut,
                                                           String fluorescence, String symmetry, String assessColor,
                                                           String assessClarity, String assessOrigin, String proportions,
                                                           BigDecimal priceMin, BigDecimal priceMax) {
 
-        BigDecimal caratMin = (assessMeasurement != null) ? assessMeasurement.subtract(BigDecimal.valueOf(0.5)) : null;
-        BigDecimal caratMax = (assessMeasurement != null) ? assessMeasurement.add(BigDecimal.valueOf(0.5)) : null;
+        BigDecimal caratMin = (assessCarat != null) ? assessCarat.subtract(BigDecimal.valueOf(0.5)) : null;
+        BigDecimal caratMax = (assessCarat != null) ? assessCarat.add(BigDecimal.valueOf(0.5)) : null;
 
         Specification<DiamondAssessmentDB2> spec = Specification.where(
-                        (assessMeasurement != null) ?
+                        (assessCarat != null) ?
                                 DiamondAssessmentSpecification.hasCaratBetween(caratMin, caratMax) :
                                 null)
                 .and(DiamondAssessmentSpecification.hasAssessShapeCut(assessShapeCut))
