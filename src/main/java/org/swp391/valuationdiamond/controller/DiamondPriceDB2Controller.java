@@ -26,8 +26,8 @@ public class DiamondPriceDB2Controller {
             @RequestParam String polish,
             @RequestParam String color,
             @RequestParam String clarity,
-            @RequestParam boolean isLabGrown) {
+            @RequestParam String diamondOrigin) {
 
-        return diamondPriceServiceDB2.calculateFinalPrice(caratWeight, shape, cut, fluorescence, symmetry, polish, color, clarity, isLabGrown);
+        return diamondPriceServiceDB2.calculateFinalPrice(caratWeight, shape, cut, fluorescence, symmetry, polish, color, clarity, diamondOrigin);
     }
 }

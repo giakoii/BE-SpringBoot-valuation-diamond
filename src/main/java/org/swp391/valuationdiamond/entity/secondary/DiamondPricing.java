@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,13 +19,16 @@ public class DiamondPricing {
   private Long id;
 
   private String shape;
+
   @Column(name = "carat_weight")
   private BigDecimal caratWeight;
+
   private BigDecimal price;
-  @Column(name = "is_lab_grown")
-  private Boolean isLabGrown;
+
+  @Column(name = "diamond_origin")
+  private String diamondOrigin;
+
   private String category;
   private String type;
   private BigDecimal adjustment;
-
 }
