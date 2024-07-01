@@ -67,10 +67,9 @@ public class EvaluationResultServiceImp {
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
 
-    public List<EvaluationResult> getResultByOrderDetailId(String orderDetailId) {
+    public EvaluationResult getResultByOrderDetailId(String orderDetailId) {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order Detail not found"));
-
-        return evaluationResultRepository.findByOrderDetailId(orderDetail);
+        return evaluationResultRepository.findFirstByOrderDetailId(orderDetail);
     }
 
     public List<EvaluationResult> getResultByUserId(String userId) {

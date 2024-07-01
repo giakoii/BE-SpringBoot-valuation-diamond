@@ -30,15 +30,14 @@ public class EvaluationResultController {
     }
 
     @GetMapping("/getEvaluationResultsByOrderDetailId/{orderDetailId}")
-    public List<EvaluationResult> getEvaluationResultsByOrderDetailId(@PathVariable("orderDetailId") String orderDetailId) {
+    public EvaluationResult getEvaluationResultByOrderDetailId(@PathVariable("orderDetailId") String orderDetailId) {
         try {
             return evaluationResultServiceImp.getResultByOrderDetailId(orderDetailId);
         } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order detail not found");
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while fetching the evaluation results");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while fetching the evaluation result");
         }
-
     }
     @GetMapping("/getEvaluationResultsByUserId/{userId}")
     public List<EvaluationResult> getEvaluationResultsByUserId(@PathVariable("userId") String userId) {
