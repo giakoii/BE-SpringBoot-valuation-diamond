@@ -112,6 +112,17 @@ public class UserController {
     public boolean deletePendingUser(@PathVariable("userId") String userId){
         return userServiceImp.deletePendingUser(userId);
     }
+    // Number only
+    @GetMapping("/countUsers")
+    public long countUsers() {
+        return userServiceImp.countUsers();
+    }
 
+    //"totalUser": count
+    @GetMapping("/totalUserCount")
+    public UserServiceImp.UserCountResponse getTotalUserCount() {
+        long totalUserCount = userServiceImp.countUsers();
+        return new UserServiceImp.UserCountResponse(totalUserCount);
+    }
 }
 

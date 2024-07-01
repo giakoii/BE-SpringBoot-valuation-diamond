@@ -277,5 +277,28 @@ public class UserServiceImp {
         pendingUserRepository.delete(pendingUser);
         return true;
     }
+    public static class UserCountResponse {
+        private long totalUser;
 
+        public UserCountResponse(long totalUser) {
+            this.totalUser = totalUser;
+        }
+
+        public long getTotalUser() {
+            return totalUser;
+        }
+
+        public void setTotalUser(long totalUser) {
+            this.totalUser = totalUser;
+        }
+
+        @Override
+        public String toString() {
+            return "UserCountResponse{" +
+                    "Total User=" + totalUser +
+                    '}';
+        }
+    } public long countUsers() {
+        return userRepository.count();
+    }
 }
