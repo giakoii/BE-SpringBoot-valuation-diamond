@@ -8,7 +8,9 @@ public class ValuationdiamondApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ValuationdiamondApplication.class, args);
-		System.out.println("Success!");
+		for (int i = 0; i <= 5; i++) {
+			System.out.println("Success!");
+		}
 	}
 
 }
