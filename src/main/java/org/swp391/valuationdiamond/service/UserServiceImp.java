@@ -31,16 +31,25 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class UserServiceImp {
-
+public class UserServiceImp implements IUserService {
+    private final UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
+    private final PendingUserRepository pendingUserRepository;
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    private PendingUserRepository pendingUserRepository;
+    public UserServiceImp(UserRepository userRepository, JavaMailSender javaMailSender, PendingUserRepository pendingUserRepository) {
+        this.userRepository = userRepository;
+        this.javaMailSender = javaMailSender;
+        this.pendingUserRepository = pendingUserRepository;
+    }
+//
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Autowired
+//    private JavaMailSender javaMailSender;
+//
+//    @Autowired
+//    private PendingUserRepository pendingUserRepository;
 
 
 
@@ -49,6 +58,7 @@ public class UserServiceImp {
 
 
     //=============================== Các hàm liên quan tới tạo, login ==========================================
+    @Override
     public void createUser(UserDTO userDTO) throws MessagingException {
         if (userRepository.findByUserId(userDTO.getUserId()) != null || pendingUserRepository.findByUserId(userDTO.getUserId()) != null){
             throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
@@ -84,6 +94,7 @@ public class UserServiceImp {
 
     //hàm confirm email
     @Transactional
+    @Override
     public User confirmEmail(String userId, String otp) {
         PendingUser pendingUser = pendingUserRepository.findByUserId(userId);
         if (pendingUser == null) {
@@ -115,6 +126,7 @@ public class UserServiceImp {
     }
 
     //hàm đăng nhập
+    @Override
     public User login(String userId, String password) {
         User user = userRepository.findByUserId(userId);
         if (user != null) {
@@ -133,6 +145,7 @@ public class UserServiceImp {
     }
 
     //hàm forgot password --> Gui email chứa OTP
+    @Override
     public boolean forgotPassword(String userId) throws MessagingException {
         User user = userRepository.findByUserId(userId);
         if (user == null) {
@@ -163,6 +176,7 @@ public class UserServiceImp {
     }
 
     //hàm reset password
+    @Override
     public User resetPassword(String userId, String otp, String newPassword) {
         User user = userRepository.findByUserId(userId);
         if (user == null) {
@@ -180,11 +194,12 @@ public class UserServiceImp {
     }
 
     //=============================== Các hàm GET ==========================================
+    @Override
     public List<User> getStaffByRoleEvaluationStaff(){
 
         return userRepository.getUsersByRole(Role.valuation_staff);
     }
-
+    @Override
     public List<User> getStaff() {
         List<User> staff = new ArrayList<>();
 
@@ -193,22 +208,22 @@ public class UserServiceImp {
 
         return staff;
     }
-
+    @Override
     public User getStaffById(String id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("Staff not found"));
     }
-
+    @Override
     public User getAUser(String id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("UserId Not Found"));
     }
-
+    @Override
     public List<User> getCustomers(){
         return userRepository.getUsersByRole(Role.customer);
     }
 
 
     //=============================== Các hàm UPDATE và DELETE ==========================================
-
+    @Override
     public User updateUser(String userId, UserDTO userDTO){
         User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -238,7 +253,7 @@ public class UserServiceImp {
         }
         return userRepository.save(user);
     }
-
+    @Override
     public boolean deleteUser(String userId) {
         User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         if (user == null) {
@@ -251,7 +266,7 @@ public class UserServiceImp {
 
     //=============================== Các hàm liên quan tới OTP và JWT ==========================================
     //jwt
-    private String jenerateJwtToken(String userId){
+    private String generateJwtToken(String userId){
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -308,6 +323,7 @@ public class UserServiceImp {
     }
 
     //delete PendingUser
+    @Override
     public boolean deletePendingUser(String userId){
         PendingUser pendingUser = pendingUserRepository.findByUserId(userId);
         if (pendingUser == null) {
@@ -337,7 +353,9 @@ public class UserServiceImp {
                     "Total User=" + totalUser +
                     '}';
         }
-    } public long countUsers() {
+    }
+    @Override
+    public long countUsers() {
         return userRepository.count();
     }
 }
