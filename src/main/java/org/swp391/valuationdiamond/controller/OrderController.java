@@ -47,6 +47,11 @@ public class OrderController {
 
     }
 
+    @GetMapping("/getOrderByUserId/{userId}")
+    List<Order> getOrderByUserId(@PathVariable("userId") String userId) {
+        return orderServiceImp.getOrderByUser(userId);
+    }
+
     // =================================== API UPDATE ======================================
 
     @PutMapping("/updateStatus/{orderId}")
