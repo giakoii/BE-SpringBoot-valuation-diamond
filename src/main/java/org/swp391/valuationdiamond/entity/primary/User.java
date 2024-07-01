@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,12 @@ public class User {
   @Column(name = "role", nullable = true, length = 50)
   @Enumerated(EnumType.STRING)
   Role role;
+
+  @Column(name = "otp", nullable = true)
+  String otp;
+
+  @Column(name = "otp_creation_time", nullable = true)
+  LocalDateTime otpCreationTime;
 
   @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
   List<Rating> ratings;
