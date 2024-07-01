@@ -40,7 +40,7 @@ public class CommittedPaperController {
         }
 }
     @GetMapping("/getCommittedPaperByOrderId/{orderId}")
-    public List<CommittedPaper> getCommittedPaperByOrderId(@PathVariable("orderId") String orderId) {
+    public CommittedPaper getCommittedPaperByOrderId(@PathVariable("orderId") String orderId) {
         try {
             return committedPaperServiceImp.getCommittedPaperByOrderId(orderId);
         } catch (RuntimeException e) {

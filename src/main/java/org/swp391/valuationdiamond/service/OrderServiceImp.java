@@ -76,7 +76,7 @@ public class OrderServiceImp {
                     String formattedCountDetail = String.valueOf(countDetail + 1);
                     String orderDetailId = "OD" + date + formattedCountDetail;
 
-                   OrderDetail orderDetail = OrderDetail.builder()
+                    OrderDetail orderDetail = OrderDetail.builder()
                             .orderDetailId(orderDetailId)
                             .receivedDate(od.getReceivedDate())
                             .expiredReceivedDate(od.getExpiredReceivedDate())
@@ -102,14 +102,14 @@ public class OrderServiceImp {
 
     public List<Order> getOrders() {
 
-        return  orderRepository.findOrderByStatus("In-Progress");
+        return orderRepository.findOrderByStatus("In-Progress");
     }
 
     public List<Order> getAllOrders() {
-        return  orderRepository.findAll();
+        return orderRepository.findAll();
     }
 
-    public Order getOrder(String id){
+    public Order getOrder(String id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order with id " + id + " not found"));
     }
@@ -120,10 +120,15 @@ public class OrderServiceImp {
         return orderRepository.findOrderByRequestId(request);
     }
 
+    //get order by user id
+    public List<Order> getOrderByUser(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return orderRepository.findOrderByUserId(user);
+    }
     //===============================================Methods Update Order ===============================================
 
-    public Order updateOrderStatus(String orderId, OrderDTO orderDTO){
-        Order order= orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    public Order updateOrderStatus(String orderId, OrderDTO orderDTO) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (orderDTO.getStatus() != null) {
             order.setStatus(orderDTO.getStatus());
@@ -132,13 +137,13 @@ public class OrderServiceImp {
     }
 
     //===============================================Methods Delete Order ===============================================
-    public boolean deleteOrder(String orderId){
+    public boolean deleteOrder(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         orderRepository.delete(order);
         return true;
     }
 
-//    public long countOrdersRegisteredWithinMonth(int year, int month) {
+    //    public long countOrdersRegisteredWithinMonth(int year, int month) {
 //        YearMonth yearMonth = YearMonth.of(year, month);
 //        LocalDate startDate = yearMonth.atDay(1);
 //        LocalDate endDate = yearMonth.atEndOfMonth();
@@ -178,7 +183,8 @@ public class OrderServiceImp {
 
         return ordersWithinMonth.size();
     }
-//
+
+    //
 //
 //    public BigDecimal sumTotalPriceWithinMonth(int year, int month) {
 //        YearMonth yearMonth = YearMonth.of(year, month);
@@ -226,6 +232,7 @@ public class OrderServiceImp {
 
         return totalPriceSum;
     }
+
     public int sumQuantityWithinMonth(int year, int month) {
         YearMonth yearMonth = YearMonth.of(year, month);
         LocalDate startDate = yearMonth.atDay(1);
@@ -249,4 +256,4 @@ public class OrderServiceImp {
         return totalQuantitySum;
     }
 
-    }
+}

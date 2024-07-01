@@ -51,9 +51,9 @@ public class CommittedPaperServiceImp {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return committedPaperRepository.findByUserId(user);
     }
-    public List<CommittedPaper> getCommittedPaperByOrderId(String orderId) {
+    public CommittedPaper getCommittedPaperByOrderId(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
-        return committedPaperRepository.findByOrderId(order);
+        return committedPaperRepository.findFirstByOrderId(order);
     }
     public List<CommittedPaper> getAllCommittedPaper() {
         return committedPaperRepository.findAll();
