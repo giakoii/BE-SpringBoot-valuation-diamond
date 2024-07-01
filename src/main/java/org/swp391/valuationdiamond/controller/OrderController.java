@@ -7,7 +7,10 @@ import org.swp391.valuationdiamond.entity.primary.Order;
 import org.swp391.valuationdiamond.service.OrderServiceImp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order_request")
@@ -59,17 +62,50 @@ public class OrderController {
         return orderServiceImp.updateOrderStatus(orderId, orderDTO);
     }
 
-    @GetMapping("/countOrderCreated/{year}/{month}")
-    public long countOrdersRegisteredWithinMonth(@PathVariable int year, @PathVariable int month) {
-        return orderServiceImp.countOrdersRegisteredWithinMonth(year, month);
+    @GetMapping("/countOrderCreatedWithinAMonth")
+    public List<OrderServiceImp.MonthlyOrderCount> countOrderCreatedWithinAMonth(
+            @RequestParam(value = "numberOfMonths", required = false, defaultValue = "1") Integer numberOfMonths) {
+        return orderServiceImp.countOrdersRegisteredPerMonth(numberOfMonths);
+    }
+    @GetMapping("/countOrderCreatedWithin6Months")
+    public List<OrderServiceImp.MonthlyOrderCount> countOrderCreatedWithinMonths(
+            @RequestParam(value = "numberOfMonths", required = false, defaultValue = "6") Integer numberOfMonths) {
+        return orderServiceImp.countOrdersRegisteredPerMonth(numberOfMonths);
     }
 
-    @GetMapping("/sumTotalPriceByOrderCreated/{year}/{month}")
-    public BigDecimal sumTotalPriceByOrderCreated(@PathVariable int year, @PathVariable int month) {
-        return orderServiceImp.sumTotalPriceWithinMonth(year, month);
+    @GetMapping("/sumTotalPriceWithinAMonth")
+    public List<OrderServiceImp.MonthlyTotalPrice> sumTotalPriceWithinAMonth(
+            @RequestParam(value = "numberOfMonths", required = false, defaultValue = "1") Integer numberOfMonths) {
+        return orderServiceImp.sumTotalPriceWithinMonths(numberOfMonths);
     }
-    @GetMapping("/sumQuantityWithinMonth/{year}/{month}")
-    public int sumQuantityWithinMonth(@PathVariable int year, @PathVariable int month) {
-        return orderServiceImp.sumQuantityWithinMonth(year, month);
+
+    @GetMapping("/sumTotalPriceWithin6Months")
+    public List<OrderServiceImp.MonthlyTotalPrice> sumTotalPriceWithinMonths(
+            @RequestParam(value = "numberOfMonths", required = false, defaultValue = "6") Integer numberOfMonths) {
+        return orderServiceImp.sumTotalPriceWithinMonths(numberOfMonths);
+    }
+    @GetMapping("/sumQuantityWithinAMonth")
+    public List<OrderServiceImp.MonthlyQuantitySum> sumQuantityWithinAMonth(
+            @RequestParam(value = "numberOfMonths", required = false, defaultValue = "1") Integer numberOfMonths) {
+        return orderServiceImp.sumQuantityWithinMonths(numberOfMonths);
+    }
+    @GetMapping("/sumQuantityWithin6Months")
+    public List<OrderServiceImp.MonthlyQuantitySum> sumQuantityWithinMonths(
+            @RequestParam(value = "numberOfMonths", required = false, defaultValue = "6") Integer numberOfMonths) {
+        return orderServiceImp.sumQuantityWithinMonths(numberOfMonths);
+    }
+    @GetMapping("/compareMonthlyTotalPrice")
+    public Map<String, Object> calculatePercentageChange() {
+        OrderServiceImp.PercentageChangeResult percentageChangeResult = orderServiceImp.calculatePercentageChange();
+
+        int currentMonth = LocalDate.now().getMonthValue();
+        int previousMonth = LocalDate.now().minusMonths(1).getMonthValue();
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("Month " + previousMonth, percentageChangeResult.getPrevMonth());
+        response.put("Month " + currentMonth, percentageChangeResult.getCurrMonth());
+        response.put("Percentage Change", percentageChangeResult.getPercentageChange() + "%");
+
+        return response;
     }
 }
