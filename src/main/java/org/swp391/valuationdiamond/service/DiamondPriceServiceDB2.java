@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public class DiamondPriceServiceDB2 {
+public class DiamondPriceServiceDB2 implements IDiamondPriceServiceDB2{
 
     private static final Logger logger = LoggerFactory.getLogger(DiamondPriceServiceDB2.class);
 
@@ -54,7 +54,7 @@ public class DiamondPriceServiceDB2 {
         return interpolatedPrice;
     }
 
-//    @Override
+    @Override
     public BigDecimal getPricePerCarat(String shape, BigDecimal caratWeight, String diamondOrigin) {
         logger.info("Fetching price for shape: {}, carat weight: {}, diamond origin: {}", shape, caratWeight, diamondOrigin);
         List<DiamondPricing> priceList = diamondPricingRepositoryDB2.findByShapeAndDiamondOrigin(shape, diamondOrigin);
@@ -66,7 +66,7 @@ public class DiamondPriceServiceDB2 {
         return BigDecimal.ZERO;
     }
 
-//    @Override
+    @Override
     public PriceDetails calculateFinalPrice(BigDecimal caratWeight, String shape, String cut,
                                             String fluorescence, String symmetry, String polish,
                                             String color, String clarity, String diamondOrigin) {
