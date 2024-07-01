@@ -43,12 +43,12 @@ public class UserController {
         }
     }
 
-    @PostMapping("/sendotp/{email}")
-    public String sendOtpEmail(@PathVariable("email") String email) {
-        userServiceImp.sendOtpEmail(email);
-
-        return "OTP sent to email successfully";
-    }
+//    @PostMapping("/sendotp/{email}")
+//    public String sendOtpEmail(@PathVariable("email") String email) {
+//        userServiceImp.sendOtpEmail(email);
+//
+//        return "OTP sent to email successfully";
+//    }
 
     // =================================== API LOGIN ======================================
 
@@ -59,7 +59,18 @@ public class UserController {
         return userServiceImp.login(userId, password);
     }
 
+    // =================================== API FORGOT PASSWORD ======================================
+    //Api gửi OTP tới email để reset password
+    @PostMapping("/forgot-password")
+    public boolean forgotPassword(@RequestParam("userId") String userId) throws MessagingException {
+        return userServiceImp.forgotPassword(userId);
+    }
 
+    //Api reset password
+    @PostMapping("/reset-password")
+    public User resetPassword(@RequestParam("userId") String userId, @RequestParam("otp") String otp, @RequestParam("newPassword") String newPassword) {
+        return userServiceImp.resetPassword(userId, otp, newPassword);
+    }
     // =================================== API GET ======================================
 
     // API get user by userId

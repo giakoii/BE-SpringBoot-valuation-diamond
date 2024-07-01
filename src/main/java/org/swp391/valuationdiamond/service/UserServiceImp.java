@@ -48,11 +48,12 @@ public class UserServiceImp {
     public static final String  SIGNER_KEY = "loJB7k9HBo3Fm3spN+I7TV5Dkx8OyznG2cnitNEX2rvKGi82q4OnhDzhv3EZkXSA";
 
 
+    //=============================== Các hàm liên quan tới tạo, login ==========================================
     public void createUser(UserDTO userDTO) throws MessagingException {
-        if (userRepository.findByUserId(userDTO.getUserId()) != null) {
+        if (userRepository.findByUserId(userDTO.getUserId()) != null || pendingUserRepository.findByUserId(userDTO.getUserId()) != null){
             throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
         }
-        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+        if (userRepository.findByEmail(userDTO.getEmail()) != null || pendingUserRepository.findByEmail(userDTO.getEmail()) != null){
             throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
         }
 
@@ -131,6 +132,54 @@ public class UserServiceImp {
 
     }
 
+    //hàm forgot password --> Gui email chứa OTP
+    public boolean forgotPassword(String userId) throws MessagingException {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (pendingUserRepository.findByUserId(userId) != null) {
+            throw new RuntimeException("OTP has already been sent");
+        }
+
+        String otp = generateOtp();
+
+        sendOtpEmail(user.getEmail(), otp);
+        PendingUser pendingUser = PendingUser.builder()
+                .userId(user.getUserId())
+                .password(user.getPassword())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .birthday(user.getBirthday())
+                .phoneNumber(user.getPhoneNumber())
+                .address(user.getAddress())
+                .role(user.getRole())
+                .otp(otp)
+                .otpCreationTime(LocalDateTime.now())
+                .build();
+        pendingUserRepository.save(pendingUser);
+        return true;
+    }
+
+    //hàm reset password
+    public User resetPassword(String userId, String otp, String newPassword) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (!pendingUserRepository.findByUserId(userId).getOtp().equals(otp)) {
+            throw new RuntimeException("OTP is incorrect");
+        }
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        pendingUserRepository.deleteByUserId(userId);
+
+        return user;
+    }
+
+    //=============================== Các hàm GET ==========================================
     public List<User> getStaffByRoleEvaluationStaff(){
 
         return userRepository.getUsersByRole(Role.valuation_staff);
@@ -145,13 +194,20 @@ public class UserServiceImp {
         return staff;
     }
 
-
     public User getStaffById(String id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("Staff not found"));
     }
+
     public User getAUser(String id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("UserId Not Found"));
     }
+
+    public List<User> getCustomers(){
+        return userRepository.getUsersByRole(Role.customer);
+    }
+
+
+    //=============================== Các hàm UPDATE và DELETE ==========================================
 
     public User updateUser(String userId, UserDTO userDTO){
         User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -192,12 +248,8 @@ public class UserServiceImp {
         return true;
     }
 
-    public List<User> getCustomers(){
-        return userRepository.getUsersByRole(Role.customer);
-    }
 
-
-
+    //=============================== Các hàm liên quan tới OTP và JWT ==========================================
     //jwt
     private String jenerateJwtToken(String userId){
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
@@ -219,14 +271,8 @@ public class UserServiceImp {
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
-
-
         return userId;
     }
-
-
-
-
 
     //hàm send otp
     public void sendOtpEmail(String email){
@@ -260,13 +306,6 @@ public class UserServiceImp {
 
         javaMailSender.send(message);
     }
-
-
-//    public List<User> getStaffs(){
-//        Role role = Role.valueOf("valuation_staff".toUpperCase());
-//        return userRepository.getUserByRole(role);
-//    }
-
 
     //delete PendingUser
     public boolean deletePendingUser(String userId){
