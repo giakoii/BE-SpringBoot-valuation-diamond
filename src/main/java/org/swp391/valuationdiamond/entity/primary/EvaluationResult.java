@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-
+import java.util.Date;
 @Entity
 @Table(name = "tbl_Evaluation_Result")
 @NoArgsConstructor
@@ -60,6 +60,9 @@ public class EvaluationResult {
 
   @Column(name = "price", nullable = true, precision = 18, scale = 2)
   BigDecimal price;
+
+  @Column(name = "create_date", nullable = true)
+  Date createDate;
 
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "user_id")

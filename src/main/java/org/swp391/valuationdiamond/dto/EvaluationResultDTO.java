@@ -4,6 +4,8 @@ package org.swp391.valuationdiamond.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class EvaluationResultDTO {
     String userId;
     String orderDetailId;
     String img;
-
+    Date createDate;
 
 
 }
