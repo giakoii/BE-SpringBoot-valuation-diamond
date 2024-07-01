@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface CommittedPaperRepository extends JpaRepository<CommittedPaper, String> {
     List<CommittedPaper> findByUserId(User userId);
-    List<CommittedPaper> findByOrderId(Order orderId);
+    CommittedPaper findFirstByOrderId(Order orderId);
 }
