@@ -42,6 +42,8 @@ public class UserServiceImp {
     @Autowired
     private PendingUserRepository pendingUserRepository;
 
+
+
     @NonFinal
     public static final String  SIGNER_KEY = "loJB7k9HBo3Fm3spN+I7TV5Dkx8OyznG2cnitNEX2rvKGi82q4OnhDzhv3EZkXSA";
 
@@ -50,6 +52,10 @@ public class UserServiceImp {
         if (userRepository.findByUserId(userDTO.getUserId()) != null) {
             throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
         }
+        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+            throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
+        }
+
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -69,6 +75,7 @@ public class UserServiceImp {
         pendingUser.setOtp(otp);
         pendingUser.setOtpCreationTime(LocalDateTime.now());
 
+
         pendingUserRepository.save(pendingUser);
 
         sendOtpEmail(userDTO.getEmail(), otp);
@@ -86,7 +93,7 @@ public class UserServiceImp {
         }
 
         LocalDateTime otpCreationTime = pendingUser.getOtpCreationTime();
-        if (otpCreationTime.isBefore(LocalDateTime.now().minusMinutes(10))) {
+        if (otpCreationTime.isBefore(LocalDateTime.now().minusMinutes(2))) {
             throw new RuntimeException("OTP has expired");
         }
 
@@ -261,6 +268,14 @@ public class UserServiceImp {
 //    }
 
 
-
+    //delete PendingUser
+    public boolean deletePendingUser(String userId){
+        PendingUser pendingUser = pendingUserRepository.findByUserId(userId);
+        if (pendingUser == null) {
+            throw new RuntimeException("User not found");
+        }
+        pendingUserRepository.delete(pendingUser);
+        return true;
+    }
 
 }

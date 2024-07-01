@@ -33,8 +33,6 @@ public class UserController {
         userServiceImp.createUser(userDTO);
     }
 
-    //xác nhận email, nếu thành công thì trả về thông tin user,
-    //lúc này mới đăng ký account thành công
     @PostMapping("/confirm-email")
     public ResponseEntity<?> confirmEmail(@RequestParam("userId") String userId, @RequestParam("otp") String otp) {
         try {
@@ -44,8 +42,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-
 
     @PostMapping("/sendotp/{email}")
     public String sendOtpEmail(@PathVariable("email") String email) {
@@ -112,6 +108,10 @@ public class UserController {
         return userServiceImp.deleteUser(userId);
     }
 
+    @DeleteMapping("/deletePendingUser/{userId}")
+    public boolean deletePendingUser(@PathVariable("userId") String userId){
+        return userServiceImp.deletePendingUser(userId);
+    }
 
 }
 
