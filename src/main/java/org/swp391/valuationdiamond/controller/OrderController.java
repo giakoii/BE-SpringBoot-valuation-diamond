@@ -62,6 +62,11 @@ public class OrderController {
         return orderServiceImp.updateOrderStatus(orderId, orderDTO);
     }
 
+    @DeleteMapping("/deleteOrder/{orderId}")
+    public boolean deleteOrder(@PathVariable("orderId") String orderId){
+        return orderServiceImp.deleteOrder(orderId);
+    }
+
     @GetMapping("/countOrderCreatedWithinAMonth")
     public List<OrderServiceImp.MonthlyOrderCount> countOrderCreatedWithinAMonth(
             @RequestParam(value = "numberOfMonths", required = false, defaultValue = "1") Integer numberOfMonths) {
