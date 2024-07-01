@@ -1,6 +1,5 @@
 package org.swp391.valuationdiamond.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.entity.secondary.DiamondPricing;
@@ -11,8 +10,13 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
-public class DiamondPriceServiceDB2 {
+public class DiamondPriceServiceDB2 implements IDiamondPriceServiceDB2{
+
+    private static final Logger logger = LoggerFactory.getLogger(DiamondPriceServiceDB2.class);
 
     @Autowired
     private DiamondPricingRepositoryDB2 diamondPricingRepositoryDB2;
@@ -31,6 +35,8 @@ public class DiamondPriceServiceDB2 {
         for (DiamondPricing pricing : priceList) {
             priceMap.put(pricing.getCaratWeight(), pricing.getPrice());
         }
+        logger.info("Price Map: {}", priceMap);
+
         BigDecimal lowerKey = priceMap.floorKey(caratWeight);
         BigDecimal upperKey = priceMap.ceilingKey(caratWeight);
         if (lowerKey == null) return priceMap.firstEntry().getValue();
@@ -40,23 +46,32 @@ public class DiamondPriceServiceDB2 {
         BigDecimal lowerPrice = priceMap.get(lowerKey);
         BigDecimal upperPrice = priceMap.get(upperKey);
 
-        return lowerPrice.add((upperPrice.subtract(lowerPrice))
+        BigDecimal interpolatedPrice = lowerPrice.add((upperPrice.subtract(lowerPrice))
                 .multiply(caratWeight.subtract(lowerKey))
                 .divide(upperKey.subtract(lowerKey), RoundingMode.HALF_UP));
+
+        logger.info("Interpolated Price for carat weight {}: {}", caratWeight, interpolatedPrice);
+        return interpolatedPrice;
     }
 
-    public BigDecimal getPricePerCarat(String shape, BigDecimal caratWeight, boolean isLabGrown) {
-        List<DiamondPricing> priceList = diamondPricingRepositoryDB2.findByShapeAndIsLabGrown(shape, isLabGrown);
+    @Override
+    public BigDecimal getPricePerCarat(String shape, BigDecimal caratWeight, String diamondOrigin) {
+        logger.info("Fetching price for shape: {}, carat weight: {}, diamond origin: {}", shape, caratWeight, diamondOrigin);
+        List<DiamondPricing> priceList = diamondPricingRepositoryDB2.findByShapeAndDiamondOrigin(shape, diamondOrigin);
+        logger.info("Price List for shape {} and origin {}: {}", shape, diamondOrigin, priceList);
         if (!priceList.isEmpty()) {
             return interpolatePrice(priceList, caratWeight);
         }
+        logger.warn("No pricing data found for shape {} and origin {}", shape, diamondOrigin);
         return BigDecimal.ZERO;
     }
 
+    @Override
     public PriceDetails calculateFinalPrice(BigDecimal caratWeight, String shape, String cut,
                                             String fluorescence, String symmetry, String polish,
-                                            String color, String clarity, boolean isLabGrown) {
-        BigDecimal pricePerCarat = getPricePerCarat(shape, caratWeight, isLabGrown);
+                                            String color, String clarity, String diamondOrigin) {
+        BigDecimal pricePerCarat = getPricePerCarat(shape, caratWeight, diamondOrigin);
+        logger.info("Price Per Carat: {}", pricePerCarat);
 
         Map<String, BigDecimal> cutAdjustments = getAdjustments("CUT");
         Map<String, BigDecimal> fluorescenceAdjustments = getAdjustments("FLUORESCENCE");
@@ -72,6 +87,9 @@ public class DiamondPriceServiceDB2 {
         BigDecimal colorAdjustment = colorAdjustments.getOrDefault(color, BigDecimal.ZERO);
         BigDecimal clarityAdjustment = clarityAdjustments.getOrDefault(clarity, BigDecimal.ZERO);
 
+        logger.info("Adjustments - Cut: {}, Fluorescence: {}, Symmetry: {}, Polish: {}, Color: {}, Clarity: {}",
+                cutAdjustment, fluorescenceAdjustment, symmetryAdjustment, polishAdjustment, colorAdjustment, clarityAdjustment);
+
         BigDecimal baseFinalPrice = caratWeight
                 .multiply(pricePerCarat)
                 .multiply(BigDecimal.ONE.add(cutAdjustment))
@@ -81,8 +99,12 @@ public class DiamondPriceServiceDB2 {
                 .multiply(BigDecimal.ONE.add(colorAdjustment))
                 .multiply(BigDecimal.ONE.add(clarityAdjustment));
 
+        logger.info("Base Final Price before range adjustment: {}", baseFinalPrice);
+
         BigDecimal minPrice = baseFinalPrice.multiply(new BigDecimal("0.85"));
         BigDecimal maxPrice = baseFinalPrice.multiply(new BigDecimal("1.15"));
+
+        logger.info("Price Range - Min: {}, Max: {}", minPrice, maxPrice);
 
         LocalDate currentDate = LocalDate.now();
         return new PriceDetails(baseFinalPrice, minPrice, maxPrice, currentDate);
