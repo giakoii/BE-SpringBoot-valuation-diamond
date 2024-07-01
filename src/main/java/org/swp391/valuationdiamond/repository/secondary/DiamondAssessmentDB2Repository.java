@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface DiamondAssessmentDB2Repository extends JpaRepository<DiamondAssessmentDB2, String>, JpaSpecificationExecutor<DiamondAssessmentDB2> {
 
-    List<DiamondAssessmentDB2> findByAssessMeasurementAndAssessShapeCutAndAssessCutAndFluorescenceAndSymmetryAndAssessColorAndAssessClarityAndAssessOriginAndProportionsAndPriceBetween(
-            BigDecimal assessMeasurement,
+    List<DiamondAssessmentDB2> findByAssessCaratAndAssessShapeCutAndAssessCutAndFluorescenceAndSymmetryAndAssessColorAndAssessClarityAndAssessOriginAndProportionsAndPriceBetween(
+            BigDecimal assessCarat,
             String assessShapeCut,
             String assessCut,
             String fluorescence,

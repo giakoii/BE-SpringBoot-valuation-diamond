@@ -24,8 +24,11 @@ public class DiamondAssessmentDB2 {
   @Column(name = "assess_origin", nullable = false)
   private String assessOrigin;
 
-  @Column(name = "assess_measurement", nullable = false)
-  private BigDecimal assessMeasurement;
+  @Column(name = "assess_carat", nullable = false)
+  private Float assessCarat;
+
+  @Column(name = "measurement", nullable = true)
+  private String measurement;
 
   @Column(name = "assess_cut", nullable = false)
   private String assessCut;
@@ -53,4 +56,10 @@ public class DiamondAssessmentDB2 {
 
   @Column(name = "price", nullable = false)
   private BigDecimal price;
+
+  @Column(name = "img", nullable = false)
+  private String imageUrl;
+
+  @Column(name = "brand", nullable = false)
+  private String brand;
 }
