@@ -145,22 +145,29 @@ public class OrderServiceImp {
     }
 
 //Count order
-    public class MonthlyOrderCount {
-        private int month;
-        private long count;
+public class MonthlyOrderCount {
+    private int month;
+    private long count;
 
-        public MonthlyOrderCount(int month, long count) {
-            this.month = month;
-            this.count = count;
-        }
-        @Override
-        public String toString() {
-            return "MonthlyOrderCount{" +
-                    "month=" + month +
-                    ", count=" + count +
-                    '}';
-        }
+    public MonthlyOrderCount(int month, long count) {
+        this.month = month;
+        this.count = count;
     }
+    public int getMonth() {
+        return month;
+    }
+    public long getCount() {
+        return count;
+    }
+    @Override
+    public String toString() {
+        return "MonthlyOrderCount{" +
+                "month=" + month +
+                ", count=" + count +
+                '}';
+    }
+}
+
     public List<MonthlyOrderCount> countOrdersRegisteredPerMonth(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
         List<YearMonth> months = IntStream.range(0, numberOfMonths)
@@ -189,12 +196,15 @@ public class OrderServiceImp {
                 })
                 .collect(Collectors.toList());
     }
+
     public BigDecimal sumTotalPriceWithinAMonth() {
         YearMonth yearMonth = YearMonth.now();
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.atEndOfMonth();
 
         List<Order> allOrders = orderRepository.findAll();
+
+
         BigDecimal totalPriceSum = allOrders.stream()
                 .filter(order -> {
                     Date orderDate = order.getOrderDate();
@@ -216,6 +226,8 @@ public class OrderServiceImp {
         LocalDate endDate = yearMonth.atEndOfMonth();
 
         List<Order> allOrders = orderRepository.findAll();
+
+
         BigDecimal totalPriceSum = allOrders.stream()
                 .filter(order -> {
                     Date orderDate = order.getOrderDate();
@@ -235,22 +247,29 @@ public class OrderServiceImp {
         private BigDecimal PrevMonth;
         private BigDecimal CurrMonth;
         private BigDecimal percentageChange;
-        
+
+        // Getters and Setters
+
         public BigDecimal getPrevMonth() {
             return PrevMonth;
         }
+
         public void setPrevMonth(BigDecimal PrevMonth) {
             this.PrevMonth = PrevMonth;
         }
+
         public BigDecimal getCurrMonth() {
             return CurrMonth;
         }
+
         public void setCurrMonth(BigDecimal CurrMonth) {
             this.CurrMonth = CurrMonth;
         }
+
         public BigDecimal getPercentageChange() {
             return percentageChange;
         }
+
         public void setPercentageChange(BigDecimal percentageChange) {
             this.percentageChange = percentageChange;
         }
@@ -266,6 +285,7 @@ public class OrderServiceImp {
             BigDecimal change = totalPriceCurrentMonth.subtract(totalPricePreviousMonth);
             percentageChange = change.divide(totalPricePreviousMonth, 4, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100));
         }
+
         PercentageChangeResult result = new PercentageChangeResult();
         result.setPrevMonth(totalPricePreviousMonth);
         result.setCurrMonth(totalPriceCurrentMonth);
@@ -281,6 +301,15 @@ public class OrderServiceImp {
             this.month = month;
             this.totalPrice = totalPrice;
         }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public BigDecimal getTotalPrice() {
+            return totalPrice;
+        }
+
         @Override
         public String toString() {
             return "MonthlyTotalPrice{" +
@@ -291,6 +320,8 @@ public class OrderServiceImp {
     }
     public List<MonthlyTotalPrice> sumTotalPriceWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
+
+        // Generate a list of YearMonth objects for the past numberOfMonths in reverse order
         List<YearMonth> months = IntStream.range(0, numberOfMonths)
                 .mapToObj(currentYearMonth::minusMonths)
                 .sorted()
@@ -327,6 +358,15 @@ public class OrderServiceImp {
             this.month = month;
             this.totalQuantity = totalQuantity;
         }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public int getTotalQuantity() {
+            return totalQuantity;
+        }
+
         @Override
         public String toString() {
             return "MonthlyQuantitySum{" +
@@ -337,6 +377,8 @@ public class OrderServiceImp {
     }
     public List<MonthlyQuantitySum> sumQuantityWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
+
+        // Generate a list of YearMonth objects for the past numberOfMonths in ascending order
         List<YearMonth> months = IntStream.range(0, numberOfMonths)
                 .mapToObj(currentYearMonth::minusMonths)
                 .sorted()
