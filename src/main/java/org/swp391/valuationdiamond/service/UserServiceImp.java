@@ -41,17 +41,6 @@ public class UserServiceImp implements IUserService {
         this.javaMailSender = javaMailSender;
         this.pendingUserRepository = pendingUserRepository;
     }
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private JavaMailSender javaMailSender;
-//
-//    @Autowired
-//    private PendingUserRepository pendingUserRepository;
-
-
 
     @NonFinal
     public static final String  SIGNER_KEY = "loJB7k9HBo3Fm3spN+I7TV5Dkx8OyznG2cnitNEX2rvKGi82q4OnhDzhv3EZkXSA";

@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Áp dụng CORS cho tất cả các URL
-                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins("https://valuation-diamond.vercel.app")
 //                .allowedOrigins("http://localhost:5174")// Chỉ định nguồn được phép
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
