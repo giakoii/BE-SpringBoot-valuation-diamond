@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.EvaluationServicePriceListDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationServicePriceList;
 import org.swp391.valuationdiamond.service.EvaluationServicePriceListServiceImp;
+import org.swp391.valuationdiamond.service.IEvaluationServicePriceListService;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/service_price_list")
 public class EvaluationServicePriceListController {
     @Autowired
-    EvaluationServicePriceListServiceImp evaluationServicePriceListServiceImp;
+    IEvaluationServicePriceListService evaluationServicePriceListServiceImp;
 
     //============================================ CREATE ====================================================
     @PostMapping("/create")
@@ -23,8 +24,8 @@ public class EvaluationServicePriceListController {
     }
 
     //============================================ GET ====================================================
-    @GetMapping("/getServicePrice/{serviceId}")
-    public List<EvaluationServicePriceList> getEvaluationPriceListByServiceID(@PathVariable String serviceId) {
+    @GetMapping("/getServicePriceListByServiceId/{serviceId}")
+    public List<EvaluationServicePriceList> getPriceListByServiceId(@PathVariable("serviceId") String serviceId) {
         return evaluationServicePriceListServiceImp.getPriceListByServiceId(serviceId);
     }
 
