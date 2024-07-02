@@ -29,8 +29,9 @@ public class UserController {
 
     //hàm đăng ký thông thường
     @PostMapping("/create")
-     void createCustomer(@Valid @RequestBody UserDTO userDTO) throws MessagingException {
+     String createCustomer(@Valid @RequestBody UserDTO userDTO) throws MessagingException {
         userServiceImp.createUser(userDTO);
+        return "Đăng ký thành công, vui lòng kiểm tra email để xác nhận tài khoản";
     }
 
     //hàm đăng ký nhân viên
@@ -47,14 +48,6 @@ public class UserController {
 
 
     }
-
-//    @PostMapping("/sendotp/{email}")
-//    public String sendOtpEmail(@PathVariable("email") String email) {
-//        userServiceImp.sendOtpEmail(email);
-//
-//        return "OTP sent to email successfully";
-//    }
-
     // =================================== API LOGIN ======================================
 
     @PostMapping("/login")
