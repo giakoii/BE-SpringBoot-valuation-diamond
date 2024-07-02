@@ -79,9 +79,11 @@ public class OrderDetailController {
     public List<OrderDetail> getOrderDetailsByEvaluationStaffId(@PathVariable("evaluationStaffId") String evaluationStaffId){
         return orderDetailServiceImp.getOrderDetailByEvaluationStaffId(evaluationStaffId);
     }
+
     @GetMapping("/countOrderDetailWithEvaluationStaffIdIsNull")
-    public long getOrderDetailWithEvaluationStaffIdIsNull(){
-        return orderDetailServiceImp.countByEvaluationStaffIdIsNull();
+    public OrderDetailServiceImp.OrderDetailCountResponse getOrderDetailWithEvaluationStaffIdIsNull(){
+        long OrderDetailWithEvaluationStaffIdIsNull = orderDetailServiceImp.countByEvaluationStaffIdIsNull();
+        return new OrderDetailServiceImp.OrderDetailCountResponse(OrderDetailWithEvaluationStaffIdIsNull);
     }
 
 }
