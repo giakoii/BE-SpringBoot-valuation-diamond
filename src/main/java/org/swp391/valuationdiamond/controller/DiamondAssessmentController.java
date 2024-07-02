@@ -26,7 +26,7 @@ public class DiamondAssessmentController {
             return diamondAssessmentServiceImp.getDiamondAssessmentList();
         }
     }
-    @GetMapping("/getDiamondAssessments/{diamondAssessmentId}")
+    @GetMapping("/getDiamondAssessmentById/{diamondAssessmentId}")
     DiamondAssessment getDiamondAssessments(@PathVariable("diamondAssessmentId") String diamondAssessmentId) {
         return diamondAssessmentServiceImp.getDiamondAssessment(diamondAssessmentId);
     }
