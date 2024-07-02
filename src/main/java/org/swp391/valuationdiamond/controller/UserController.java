@@ -33,6 +33,11 @@ public class UserController {
         userServiceImp.createUser(userDTO);
     }
 
+    //hàm đăng ký nhân viên
+    @PostMapping("/createStaff")
+    public User createStaff(@Valid @RequestBody UserDTO userDTO) {
+        return userServiceImp.createStaff(userDTO);
+    }
     //
     @PostMapping("/confirm-email")
     public ResponseEntity<?> confirmEmail(@RequestBody Map<String, String> request) {
