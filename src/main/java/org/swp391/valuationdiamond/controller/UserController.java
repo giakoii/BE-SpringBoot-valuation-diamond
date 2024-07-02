@@ -33,14 +33,14 @@ public class UserController {
         userServiceImp.createUser(userDTO);
     }
 
+    //
     @PostMapping("/confirm-email")
-    public ResponseEntity<?> confirmEmail(@RequestParam("userId") String userId, @RequestParam("otp") String otp) {
-        try {
-            User user = userServiceImp.confirmEmail(userId, otp);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<?> confirmEmail(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId");
+        String otp = request.get("otp");
+        return ResponseEntity.ok(userServiceImp.confirmEmail(userId, otp));
+
+
     }
 
 //    @PostMapping("/sendotp/{email}")
