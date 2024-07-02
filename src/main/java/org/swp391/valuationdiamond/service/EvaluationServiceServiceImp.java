@@ -10,6 +10,8 @@ import org.swp391.valuationdiamond.repository.primary.EvaluationServicePriceList
 import org.swp391.valuationdiamond.repository.primary.EvaluationServiceRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 @Service
 public class EvaluationServiceServiceImp {
@@ -24,8 +26,14 @@ public class EvaluationServiceServiceImp {
 
     //============================================ Hàm create ========================================
     public EvaluationService createService(EvaluationServiceDTO evaluationServiceDTO) {
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+
+        long count = evaluationServiceRepository.count();
+        String formattedCount = String.valueOf(count + 1);
+        String serviceId = "SV" + date + formattedCount;
+
         EvaluationService evaluationService = EvaluationService.builder()
-                .serviceId(evaluationServiceDTO.getServiceId())
+                .serviceId(serviceId)
                 .serviceType(evaluationServiceDTO.getServiceType())
                 .serviceDescription(evaluationServiceDTO.getServiceDescription())
                 .build();
