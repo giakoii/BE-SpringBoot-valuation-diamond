@@ -66,14 +66,6 @@ public class EvaluationServiceServiceImp {
     public boolean deleteServiceById(String serviceId){
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
-        List<EvaluationServicePriceList> evaluationServicePriceLists = evaluationServicePriceListReponsitory.findByServiceId(evaluationService);
-        for (EvaluationServicePriceList evaluationServicePriceList : evaluationServicePriceLists) {
-            evaluationServicePriceListReponsitory.delete(evaluationServicePriceList);
-        }
-        List<OrderDetail> orderDetails = orderDetailRepository.findByServiceId(evaluationService);
-        for (OrderDetail orderDetail : orderDetails) {
-            orderDetailRepository.delete(orderDetail);
-        }
         evaluationServiceRepository.delete(evaluationService);
         return true;
     }
