@@ -146,6 +146,28 @@ public class OrderDetailServiceImp {
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
     }
+    public static class OrderDetailCountResponse {
+        private long Count;
+
+        public OrderDetailCountResponse(long Count) {
+            this.Count = Count;
+        }
+
+        public long getCount() {
+            return Count;
+        }
+
+        public void setCount(long orderDetailCount) {
+            this.Count = Count;
+        }
+
+        @Override
+        public String toString() {
+            return "UserCountResponse{" +
+                    "Total Order Detail=" + Count +
+                    '}';
+        }
+    }
     public long countByEvaluationStaffIdIsNull(){
         return orderDetailRepository.countByEvaluationStaffIdIsNull();
     }
