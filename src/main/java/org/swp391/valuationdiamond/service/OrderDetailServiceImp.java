@@ -146,6 +146,8 @@ public class OrderDetailServiceImp {
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
     }
-
+    public long countByEvaluationStaffIdIsNull(){
+        return orderDetailRepository.countByEvaluationStaffIdIsNull();
+    }
 }
 
