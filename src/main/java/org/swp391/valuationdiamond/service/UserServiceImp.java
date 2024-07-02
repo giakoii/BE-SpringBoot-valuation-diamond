@@ -215,9 +215,9 @@ public class UserServiceImp implements IUserService {
     @Override
     public User updateUser(String userId, UserDTO userDTO){
         User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         if (userDTO.getPassword() != null) {
-            user.setPassword(userDTO.getPassword());
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
         if (userDTO.getFirstName() != null) {
             user.setFirstName(userDTO.getFirstName());
