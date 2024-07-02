@@ -165,6 +165,7 @@ public class UserServiceImp implements IUserService {
 
     //hàm reset password
     @Override
+    @Transactional
     public User resetPassword(String userId, String otp, String newPassword) {
         User user = userRepository.findByUserId(userId);
         if (user == null) {

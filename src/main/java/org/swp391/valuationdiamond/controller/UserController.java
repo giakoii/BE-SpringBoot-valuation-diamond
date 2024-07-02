@@ -62,13 +62,17 @@ public class UserController {
     // =================================== API FORGOT PASSWORD ======================================
     //Api gửi OTP tới email để reset password
     @PostMapping("/forgot-password")
-    public boolean forgotPassword(@RequestParam("userId") String userId) throws MessagingException {
+    public boolean forgotPassword(@RequestBody Map<String, String> request) throws MessagingException {
+        String userId = request.get("userId");
         return userServiceImp.forgotPassword(userId);
     }
 
     //Api reset password
     @PostMapping("/reset-password")
-    public User resetPassword(@RequestParam("userId") String userId, @RequestParam("otp") String otp, @RequestParam("newPassword") String newPassword) {
+    public User resetPassword(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId");
+        String otp = request.get("otp");
+        String newPassword = request.get("newPassword");
         return userServiceImp.resetPassword(userId, otp, newPassword);
     }
     // =================================== API GET ======================================

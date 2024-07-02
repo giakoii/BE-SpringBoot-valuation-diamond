@@ -20,7 +20,7 @@ public class UserDTO {
     @Pattern(regexp = "^[a-zA-Z\\s]{1,255}$", message = "Last name must contain only letters and spaces")
     String lastName;
     Date birthday;
-    @Pattern(regexp = "^(\\+84|0)\\d{9,10}$", message = "Phone number must be in the format +84xxxxxxxxx or 0xxxxxxxxx")
+    @Pattern(regexp = "^(0)\\d{9,10}$", message = "Phone number must be in the format +84xxxxxxxxx or 0xxxxxxxxx")
     String phoneNumber;
     @Email
     String email;
