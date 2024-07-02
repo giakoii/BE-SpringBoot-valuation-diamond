@@ -80,6 +80,33 @@ public class UserServiceImp implements IUserService {
         sendOtpEmail(userDTO.getEmail(), otp);
     }
 
+    //hàm tạo account cho staff
+    @Override
+    public User createStaff(UserDTO userDTO){
+        if (userRepository.findByUserId(userDTO.getUserId()) != null){
+            throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
+        }
+        if (userRepository.findByEmail(userDTO.getEmail()) != null){
+            throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
+        }
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+        User user = User.builder()
+                .userId(userDTO.getUserId())
+                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .email(userDTO.getEmail())
+                .birthday(userDTO.getBirthday())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .address(userDTO.getAddress())
+                .role(Role.valueOf(userDTO.getRole()))
+                .build();
+
+        return userRepository.save(user);
+    }
+
     //hàm confirm email
     @Transactional
     @Override

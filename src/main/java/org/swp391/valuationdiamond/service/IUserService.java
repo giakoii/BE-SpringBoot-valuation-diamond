@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface IUserService {
     void createUser(UserDTO userDTO) throws MessagingException;
+    User createStaff(UserDTO userDTO);
     User confirmEmail(String userId, String otp);
     User login(String userId, String password);
     boolean forgotPassword(String userId) throws MessagingException;
