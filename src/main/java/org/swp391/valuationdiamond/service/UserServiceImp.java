@@ -35,6 +35,7 @@ public class UserServiceImp implements IUserService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
     private final PendingUserRepository pendingUserRepository;
+
     @Autowired
     public UserServiceImp(UserRepository userRepository, JavaMailSender javaMailSender, PendingUserRepository pendingUserRepository) {
         this.userRepository = userRepository;
@@ -56,7 +57,6 @@ public class UserServiceImp implements IUserService {
             throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
         }
 
-
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         PendingUser pendingUser = PendingUser.builder()
@@ -74,7 +74,6 @@ public class UserServiceImp implements IUserService {
         String otp = generateOtp();
         pendingUser.setOtp(otp);
         pendingUser.setOtpCreationTime(LocalDateTime.now());
-
 
         pendingUserRepository.save(pendingUser);
 
@@ -291,7 +290,7 @@ public class UserServiceImp implements IUserService {
 
     private String generateOtp(){
         SecureRandom random = new SecureRandom();
-        int otp = 1000001 + random.nextInt(9000000);
+        int otp = 100001 + random.nextInt(900000);
         return String.valueOf(otp);
     }
 

@@ -20,7 +20,7 @@ public class EvaluationServicePriceList {
   @Column(name = "size_from", nullable = true)
   int sizeFrom;
 
-  @Column(name = "sizeTo", nullable = true)
+  @Column(name = "size_to", nullable = true)
   int sizeTo;
 
   @Column(name = "init_price", nullable = true)

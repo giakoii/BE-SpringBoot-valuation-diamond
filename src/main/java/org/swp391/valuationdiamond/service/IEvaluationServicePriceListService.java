@@ -12,5 +12,6 @@ public interface IEvaluationServicePriceListService {
     double calculateServicePrice(String serviceId, float sampleSize);
     List<EvaluationServicePriceList> updateServicePriceListByServiceId(String serviceId, EvaluationServicePriceListDTO evaluationServicePriceListDTO);
     EvaluationServicePriceList updateServicePriceListById(String id, EvaluationServicePriceListDTO evaluationServicePriceListDTO);
+    EvaluationServicePriceList deleteServicePriceListById(String id);
 
 }

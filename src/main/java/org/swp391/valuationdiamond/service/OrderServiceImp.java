@@ -1,5 +1,7 @@
 package org.swp391.valuationdiamond.service;
 
+import org.apache.coyote.Request;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.controller.OrderDetailController;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +40,7 @@ public class OrderServiceImp {
 
     @Autowired
     private OrderDetailServiceImp orderDetailServiceImp;
+
     @Autowired
     private OrderDetailController orderDetailController;
     //=============================================== Create Order ===============================================
@@ -45,6 +49,7 @@ public class OrderServiceImp {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 
         User user = userRepository.findById(orderDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+
         EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId()).orElseThrow(() -> new RuntimeException("Request not found"));
 
         if (orderDTO.getUserId() == null || orderDTO.getRequestId() == null) {
@@ -66,6 +71,7 @@ public class OrderServiceImp {
                 .userId(user)
                 .requestId(request)
                 .build();
+
         Order savedOrder = orderRepository.save(order);
 
         List<OrderDetail> orderDetails = orderDTO.getOrderDetails().stream()
@@ -115,16 +121,27 @@ public class OrderServiceImp {
                 .orElseThrow(() -> new RuntimeException("Order with id " + id + " not found"));
     }
 
-    //API get order by request id
+    //get order by request id
     public List<Order> getOrderByRequest(String requestId) {
         EvaluationRequest request = evaluationRequestRepository.findById(requestId).orElseThrow(() -> new RuntimeException("Request not found"));
         return orderRepository.findOrderByRequestId(request);
     }
 
     //get order by user id
+
+    //order <-- tương ứng request <-- tương ứng user
     public List<Order> getOrderByUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        return orderRepository.findOrderByUserId(user);
+
+        List<EvaluationRequest> requesId = evaluationRequestRepository.findByUserId(user);
+
+        List<Order> orderList = new ArrayList<>();
+
+        for (EvaluationRequest request : requesId) {
+            List<Order> orders = orderRepository.findOrderByRequestId(request);
+            orderList.addAll(orders);
+        }
+        return orderList;
     }
     //===============================================Methods Update Order ===============================================
 

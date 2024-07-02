@@ -11,11 +11,7 @@ import java.util.List;
 public interface EvaluationRequestRepository extends JpaRepository<EvaluationRequest, String> {
     EvaluationRequest findByRequestId(String requestId);
     List<EvaluationRequest> findByStatus(String status);
-
-
     List<EvaluationRequest> findByUserId(User userId);
-
     boolean deleteByRequestId(String requestId);
-
 
 }

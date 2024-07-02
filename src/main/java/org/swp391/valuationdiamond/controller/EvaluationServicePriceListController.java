@@ -65,4 +65,13 @@ public class EvaluationServicePriceListController {
     public EvaluationServicePriceList updateById(@PathVariable String id, @RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
         return evaluationServicePriceListServiceImp.updateServicePriceListById(id, evaluationServicePriceListDTO);
     }
+
+
+    //============================================ DELETE ====================================================
+    @DeleteMapping("/deleteServicePriceListById/{id}")
+    public EvaluationServicePriceList deleteServicePriceListById(@PathVariable("id") String id) {
+        return evaluationServicePriceListServiceImp.deleteServicePriceListById(id);
+    }
+
+
 }

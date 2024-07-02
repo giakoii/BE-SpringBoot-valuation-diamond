@@ -44,7 +44,7 @@ public class Order {
 
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+  @JoinColumn(name = "consultant_staff_id", referencedColumnName = "user_id")
   User userId;
 
   @JsonManagedReference

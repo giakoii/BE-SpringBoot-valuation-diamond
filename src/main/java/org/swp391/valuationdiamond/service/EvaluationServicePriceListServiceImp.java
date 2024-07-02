@@ -129,4 +129,12 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
         return evaluationServicePriceListRepository.save(evaluationServicePriceList);
     }
 
+    //============================================ DELETE ====================================================
+    @Override
+    public EvaluationServicePriceList deleteServicePriceListById(String id) {
+        EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findById(id).orElseThrow(() -> new RuntimeException("Price list not found with " + id + " id"));
+        evaluationServicePriceListRepository.delete(evaluationServicePriceList);
+        return evaluationServicePriceList;
+    }
+
 }
