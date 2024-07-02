@@ -17,9 +17,9 @@ public class DeletePendingUserAfter2M {
     @Autowired
     private PendingUserRepository pendingUserRepository;
 
-    @Scheduled(fixedRate = 120000)
+    @Scheduled(fixedRate = 300000)
     public String deletePendingUserAfter2Minutes() {
-        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(2);
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(5);
         List<PendingUser> unConfirmedUsers = pendingUserRepository.findAllByOtpCreationTimeBefore(cutoffTime);
         if (unConfirmedUsers.isEmpty()) {
             return "No pending user to delete";

@@ -93,7 +93,7 @@ public class UserServiceImp implements IUserService {
         }
 
         LocalDateTime otpCreationTime = pendingUser.getOtpCreationTime();
-        if (otpCreationTime.isBefore(LocalDateTime.now().minusMinutes(2))) {
+        if (otpCreationTime.isBefore(LocalDateTime.now().minusMinutes(5))) {
             throw new RuntimeException("OTP has expired");
         }
 
@@ -303,7 +303,7 @@ public class UserServiceImp implements IUserService {
 
         String text = "Dear User,\n\n"
                 + "Your OTP is: " + otp + "\n\n"
-                + "This OTP is valid for 10 minutes. Do not share this OTP with anyone for security reasons.\n\n"
+                + "This OTP is valid for 5 minutes. Do not share this OTP with anyone for security reasons.\n\n"
                 + "Best regards,\n"
                 + "Valuation Diamond";
         helper.setText(text);
