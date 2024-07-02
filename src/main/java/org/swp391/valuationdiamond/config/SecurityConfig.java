@@ -33,41 +33,10 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-//    @Autowired
-//    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .oauth2Login(oauth2 -> {
-//                    oauth2.successHandler(oAuth2LoginSuccessHandler);
-//                })
-//                .authorizeRequests(authorize -> {
-//                            authorize.anyRequest().authenticated();
-//                        }
-//                ).build();
-//    }
-//
-//    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
-//        return (request, response, authentication) -> {
-//            response.setStatus(HttpServletResponse.SC_OK);
-//            response.sendRedirect(frontendUrl);
-//        };
-//    }
-//
-
-    @Value("${frontend.url}")
-    private String frontendUrl;
-
-
-
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://valuation-diamond.vercel.app")); // Allow this origin
+        configuration.setAllowedOrigins(Arrays.asList("https://valuation-diamond.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));

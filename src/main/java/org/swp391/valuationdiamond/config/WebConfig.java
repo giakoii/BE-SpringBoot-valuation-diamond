@@ -14,23 +14,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
-//public class WebConfig {
-//
-//
-//    @Bean
-//    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
-//        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(corsFilter());
-//        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-//        return bean;
-//    }
-
 public class WebConfig implements WebMvcConfigurer {
+//    @Value("${frontend.url}")
+//    private String frontendUrl;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Áp dụng CORS cho tất cả các URL
-                .allowedOrigins("https://valuation-diamond.vercel.app")
-//                .allowedOrigins("http://localhost:5174")// Chỉ định nguồn được phép
+        registry.addMapping("/**")
+                .allowedOrigins("https://valuation-diamond.vercel.app", "http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

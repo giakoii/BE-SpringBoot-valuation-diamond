@@ -1,7 +1,9 @@
 server:
   port: 80
 frontend:
-  url: http://localhost:5173/
+  url:
+    - http://localhost:5173/
+    - https://valuation-diamond.vercel.app
 
 spring:
   application:
