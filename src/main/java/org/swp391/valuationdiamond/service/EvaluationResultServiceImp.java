@@ -23,9 +23,7 @@ public class EvaluationResultServiceImp {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-    //check xem khi người dùng nhập có đúng cái luồng như này không
-    //thằng user đó có phải là người tạo ra cái order detail đó không
-    //user --> request --> order --> orderDetail --> evaluationResult
+    //thêm try catch vào hàm create
     //============================================ CREATE =====================================
     public EvaluationResult createEvaluationResult(EvaluationResultDTO EvaluationResultDTO){
         long count = evaluationResultRepository.count();
@@ -76,7 +74,6 @@ public class EvaluationResultServiceImp {
         return evaluationResultRepository.findFirstByOrderDetailId(orderDetail);
     }
 
-    //check lại logic như hàm create
     public List<EvaluationResult> getResultByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -87,6 +84,7 @@ public class EvaluationResultServiceImp {
         return evaluationResultRepository.findAll();
     }
 
+    //============================================ UPDATE =====================================
     public EvaluationResult updateResult(String resultId, EvaluationResultDTO evaluationResultDTO){
         EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
 
