@@ -45,16 +45,21 @@ public class OrderServiceImp {
     private OrderDetailController orderDetailController;
     //=============================================== Create Order ===============================================
 
+    //user --> request --> order --> orderDetail
     public Order saveOrder(OrderDTO orderDTO) {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 
-        User user = userRepository.findById(orderDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(orderDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId()).orElseThrow(() -> new RuntimeException("Request not found"));
+        EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId())
+                .orElseThrow(() -> new RuntimeException("Request not found"));
 
-        if (orderDTO.getUserId() == null || orderDTO.getRequestId() == null) {
-            throw new IllegalArgumentException("User ID and Request ID must not be null");
-        }
+        EvaluationRequest requestByUser = evaluationRequestRepository.findByUserId(user)
+                .stream()
+                .filter(r -> r.equals(request))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Request by " + orderDTO.getUserId() + " not found"));
 
         long count = orderRepository.count();
         String formattedCount = String.valueOf(count + 1);
@@ -133,11 +138,11 @@ public class OrderServiceImp {
     public List<Order> getOrderByUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<EvaluationRequest> requesId = evaluationRequestRepository.findByUserId(user);
+        List<EvaluationRequest> requestId = evaluationRequestRepository.findByUserId(user);
 
         List<Order> orderList = new ArrayList<>();
 
-        for (EvaluationRequest request : requesId) {
+        for (EvaluationRequest request : requestId) {
             List<Order> orders = orderRepository.findOrderByRequestId(request);
             orderList.addAll(orders);
         }

@@ -31,23 +31,24 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
     @Override
     @Transactional
     public EvaluationRequest createEvaluationRequest(EvaluationRequestDTO evaluationRequestDTO) {
-        EvaluationRequest evaluationRequest = new EvaluationRequest();
+
 
         long count = evaluationRequestRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         String requestId = "ER"+ date + formattedCount ;
 
-        evaluationRequest.setRequestId(requestId);
-        evaluationRequest.setRequestDescription(evaluationRequestDTO.getRequestDescription());
-        evaluationRequest.setRequestDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-        evaluationRequest.setRequestEmail(evaluationRequestDTO.getRequestEmail());
-        evaluationRequest.setGuestName(evaluationRequestDTO.getGuestName());
-        evaluationRequest.setStatus("Requesting");
-        evaluationRequest.setService(evaluationRequestDTO.getService());
-        evaluationRequest.setPhoneNumber(evaluationRequestDTO.getPhoneNumber());
-        evaluationRequest.setMeetingDate(evaluationRequestDTO.getMeetingDate());
-
+        EvaluationRequest evaluationRequest = EvaluationRequest.builder()
+                .requestId(requestId)
+                .requestDescription(evaluationRequestDTO.getRequestDescription())
+                .requestDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                .requestEmail(evaluationRequestDTO.getRequestEmail())
+                .guestName(evaluationRequestDTO.getGuestName())
+                .status("Requesting")
+                .service(evaluationRequestDTO.getService())
+                .phoneNumber(evaluationRequestDTO.getPhoneNumber())
+                .meetingDate(evaluationRequestDTO.getMeetingDate())
+                .build();
 
         User userId = userRepository.findById(evaluationRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
         evaluationRequest.setUserId(userId);

@@ -23,6 +23,8 @@ public class CommittedPaperServiceImp {
     @Autowired
     private OrderRepository orderRepository;
 
+    //check lại logic hàm này
+    //user phải là người tạo ra cái order đó, không cho nhập bừa
     public CommittedPaper createCommittedPaper(CommittedPaperDTO  committedPaperDTO) {
         CommittedPaper committedPaper = new CommittedPaper();
         long count = committedPaperRepository.count();

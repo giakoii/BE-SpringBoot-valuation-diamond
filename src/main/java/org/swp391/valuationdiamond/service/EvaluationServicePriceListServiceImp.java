@@ -28,23 +28,30 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     //============================================ CREATE ====================================================
     @Override
     public EvaluationServicePriceList createServicePriceList(EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        long count = evaluationServicePriceListRepository.count();
-        String formattedCount = String.valueOf(count + 1);
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-        String servicePriceList = "ESPL"+ date + formattedCount ;
+        try {
+            long count = evaluationServicePriceListRepository.count();
+            String formattedCount = String.valueOf(count + 1);
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+            String servicePriceList = "ESPL" + date + formattedCount;
 
-        EvaluationService evaluationService = evaluationServiceRepository.findById(evaluationServicePriceListDTO.getServiceId()).orElseThrow(() -> new RuntimeException("Service not found"));
+            if (evaluationServicePriceListDTO.getSizeFrom() >= evaluationServicePriceListDTO.getSizeTo()) {
+                throw new IllegalArgumentException("Size from must be less than size to");
+            }
 
-        EvaluationServicePriceList evaluationServicePriceList = EvaluationServicePriceList.builder()
-               .priceList(servicePriceList)
-               .initPrice(evaluationServicePriceListDTO.getInitPrice())
-               .priceUnit(evaluationServicePriceListDTO.getPriceUnit())
-               .sizeFrom(evaluationServicePriceListDTO.getSizeFrom())
-               .sizeTo(evaluationServicePriceListDTO.getSizeTo())
-               .serviceId(evaluationService)
-               .build();
-       return  evaluationServicePriceListRepository.save(evaluationServicePriceList);
+            EvaluationService evaluationService = evaluationServiceRepository.findById(evaluationServicePriceListDTO.getServiceId()).orElseThrow(() -> new RuntimeException("Service not found"));
+            EvaluationServicePriceList evaluationServicePriceList = EvaluationServicePriceList.builder()
+                    .priceList(servicePriceList)
+                    .initPrice(evaluationServicePriceListDTO.getInitPrice())
+                    .priceUnit(evaluationServicePriceListDTO.getPriceUnit())
+                    .sizeFrom(evaluationServicePriceListDTO.getSizeFrom())
+                    .sizeTo(evaluationServicePriceListDTO.getSizeTo())
+                    .serviceId(evaluationService)
+                    .build();
 
+            return evaluationServicePriceListRepository.save(evaluationServicePriceList);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while creating the service price list", e);
+        }
     }
 
     //============================================ GET ====================================================
@@ -58,12 +65,14 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     public List<EvaluationServicePriceList> getAllServicePriceList() {
         return evaluationServicePriceListRepository.findAll();
     }
-//======================================Calculate SampleSize===========================================
-     double calculateServicePrice(double initPrice, float size, float sizeFrom) {
+
+    //======================================Calculate SampleSize===========================================
+    double calculateServicePrice(double initPrice, float size, float sizeFrom) {
         double priceUnit = size < 12 ? 0 : 1200000;
         double unitPrice = initPrice + (size - sizeFrom) * priceUnit;
         return unitPrice;
     }
+
     @Override
     public double calculateServicePrice(String serviceId, float size) {
         if (size <= 2) {
@@ -86,53 +95,61 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     }
 
 
-
-
     //================================= Hàm update ===================================
     //UPDATE PRICE LIST BY SERVICE ID
     @Override
     public List<EvaluationServicePriceList> updateServicePriceListByServiceId(String serviceId, EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        List<EvaluationServicePriceList> evaluationServicePriceLists = evaluationServicePriceListRepository.findByServiceId(evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found")));
+        try {
+            List<EvaluationServicePriceList> evaluationServicePriceLists = evaluationServicePriceListRepository.findByServiceId(evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found")));
 
-        EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found"));
-        EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findByServiceId(evaluationService).stream().findFirst().orElseThrow(() -> new RuntimeException("Price list not found with " + serviceId + " service id"));
+            EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found"));
+            EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findByServiceId(evaluationService).stream().findFirst().orElseThrow(() -> new RuntimeException("Price list not found with " + serviceId + " service id"));
 
-        if(evaluationServicePriceListDTO.getSizeFrom() != null){
-            evaluationServicePriceList.setSizeFrom(evaluationServicePriceListDTO.getSizeFrom());
+            if (evaluationServicePriceListDTO.getSizeFrom() != null) {
+                evaluationServicePriceList.setSizeFrom(evaluationServicePriceListDTO.getSizeFrom());
+            }
+            if (evaluationServicePriceListDTO.getSizeTo() != null) {
+                evaluationServicePriceList.setSizeTo(evaluationServicePriceListDTO.getSizeTo());
+            }
+            if (evaluationServicePriceListDTO.getInitPrice() != null) {
+                evaluationServicePriceList.setInitPrice(evaluationServicePriceListDTO.getInitPrice());
+            }
+            if (evaluationServicePriceListDTO.getPriceUnit() != null) {
+                evaluationServicePriceList.setPriceUnit(evaluationServicePriceListDTO.getPriceUnit());
+            }
+            return evaluationServicePriceListRepository.saveAll(evaluationServicePriceLists);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the service price list", e);
         }
-        if(evaluationServicePriceListDTO.getSizeTo() != null){
-            evaluationServicePriceList.setSizeTo(evaluationServicePriceListDTO.getSizeTo());
-        }
-        if(evaluationServicePriceListDTO.getInitPrice() != null){
-            evaluationServicePriceList.setInitPrice(evaluationServicePriceListDTO.getInitPrice());
-        }
-        if(evaluationServicePriceListDTO.getPriceUnit() != null){
-            evaluationServicePriceList.setPriceUnit(evaluationServicePriceListDTO.getPriceUnit());
-        }
-
-        return evaluationServicePriceListRepository.saveAll(evaluationServicePriceLists);
 
     }
 
     //UPDATE PRICE LIST BY ID
     @Override
     public EvaluationServicePriceList updateServicePriceListById(String id, EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
+
         EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findById(id).orElseThrow(() -> new RuntimeException("Price list not found with " + id + " id"));
+        if (evaluationServicePriceListDTO.getSizeFrom() >= evaluationServicePriceListDTO.getSizeTo()) {
+            throw new IllegalArgumentException("Size from must be less than size to");
+        }
+        try {
+            if (evaluationServicePriceListDTO.getSizeFrom() != null) {
+                evaluationServicePriceList.setSizeFrom(evaluationServicePriceListDTO.getSizeFrom());
+            }
+            if (evaluationServicePriceListDTO.getSizeTo() != null) {
+                evaluationServicePriceList.setSizeTo(evaluationServicePriceListDTO.getSizeTo());
+            }
+            if (evaluationServicePriceListDTO.getInitPrice() != null) {
+                evaluationServicePriceList.setInitPrice(evaluationServicePriceListDTO.getInitPrice());
+            }
+            if (evaluationServicePriceListDTO.getPriceUnit() != null) {
+                evaluationServicePriceList.setPriceUnit(evaluationServicePriceListDTO.getPriceUnit());
+            }
 
-        if(evaluationServicePriceListDTO.getSizeFrom() != null){
-            evaluationServicePriceList.setSizeFrom(evaluationServicePriceListDTO.getSizeFrom());
+            return evaluationServicePriceListRepository.save(evaluationServicePriceList);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the service price list", e);
         }
-        if(evaluationServicePriceListDTO.getSizeTo() != null){
-            evaluationServicePriceList.setSizeTo(evaluationServicePriceListDTO.getSizeTo());
-        }
-        if(evaluationServicePriceListDTO.getInitPrice() != null){
-            evaluationServicePriceList.setInitPrice(evaluationServicePriceListDTO.getInitPrice());
-        }
-        if(evaluationServicePriceListDTO.getPriceUnit() != null){
-            evaluationServicePriceList.setPriceUnit(evaluationServicePriceListDTO.getPriceUnit());
-        }
-
-        return evaluationServicePriceListRepository.save(evaluationServicePriceList);
     }
 
     //============================================ DELETE ====================================================
