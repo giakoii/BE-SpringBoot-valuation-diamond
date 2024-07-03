@@ -55,11 +55,11 @@ public class OrderServiceImp {
         EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId())
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
-        EvaluationRequest requestByUser = evaluationRequestRepository.findByUserId(user)
-                .stream()
-                .filter(r -> r.equals(request))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Request by " + orderDTO.getUserId() + " not found"));
+//        EvaluationRequest requestByUser = evaluationRequestRepository.findByUserId(user)
+//                .stream()
+//                .filter(r -> r.equals(request))
+//                .findFirst()
+//                .orElseThrow(() -> new RuntimeException("Request by " + orderDTO.getUserId() + " not found"));
 
         long count = orderRepository.count();
         String formattedCount = String.valueOf(count + 1);
