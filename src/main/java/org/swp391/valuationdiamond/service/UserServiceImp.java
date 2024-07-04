@@ -106,6 +106,22 @@ public class UserServiceImp implements IUserService {
 
         return userRepository.save(user);
     }
+    //change password
+    @Override
+    public User changePassword(String userId, String oldPassword, String newPassword){
+        User user = userRepository.findByUserId(userId);
+        if(user == null){
+            throw new RuntimeException("User not found");
+        }
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        if(passwordEncoder.matches(oldPassword, user.getPassword())){
+            user.setPassword(passwordEncoder.encode(newPassword));
+            return userRepository.save(user);
+        }
+        else {
+            throw new RuntimeException("Password is incorrect");
+        }
+    }
 
     //hàm confirm email
     @Transactional

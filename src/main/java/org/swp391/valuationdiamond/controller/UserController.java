@@ -39,6 +39,14 @@ public class UserController {
     public User createStaff(@Valid @RequestBody UserDTO userDTO) {
         return userServiceImp.createStaff(userDTO);
     }
+    //hàm change password
+    @PostMapping("/change-password")
+    User changePassword(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId");
+        String oldPassword = request.get("oldPassword");
+        String newPassword = request.get("newPassword");
+        return userServiceImp.changePassword(userId, oldPassword, newPassword);
+    }
     //
     @PostMapping("/confirm-email")
     public ResponseEntity<?> confirmEmail(@RequestBody Map<String, String> request) {
