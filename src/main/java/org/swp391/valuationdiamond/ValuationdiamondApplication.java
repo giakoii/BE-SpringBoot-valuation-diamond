@@ -13,13 +13,18 @@ import java.util.TimeZone;
 @EnableScheduling
 public class ValuationdiamondApplication {
 
-	public static void main(String[] args) {
-//		TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
-		SpringApplication.run(ValuationdiamondApplication.class, args);
-		for (int i = 0; i <= 5; i++) {
-			System.out.println("Success!");
-		}
-
-	}
-
+    public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
+        SpringApplication.run(ValuationdiamondApplication.class, args);
+        for (int i = 0; i <= 5; i++) {
+            System.out.println("Success!");
+        }
+    }
+//
+//    @Bean
+//    public CommandLineRunner commandLineRunner(EvaluationRequestServiceImp evaluationRequestServiceImp) {
+//        return args -> {
+//            System.out.println(evaluationRequestServiceImp.getEvaluationRequest("ER0507202440").getRequestDate());
+//        };
+//    }
 }

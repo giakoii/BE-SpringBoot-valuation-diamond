@@ -239,7 +239,7 @@ public class UserServiceImp implements IUserService {
     @Override
     public List<User> getStaff() {
         List<User> staff = new ArrayList<>();
-
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         staff.addAll(userRepository.getUsersByRole(Role.valuation_staff));
         staff.addAll(userRepository.getUsersByRole(Role.consultant_staff));
 
