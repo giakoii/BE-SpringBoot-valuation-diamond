@@ -56,6 +56,9 @@ public class UserServiceImp implements IUserService {
         if (userRepository.findByEmail(userDTO.getEmail()) != null || pendingUserRepository.findByEmail(userDTO.getEmail()) != null){
             throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
         }
+        if(userDTO.getBirthday().toInstant().isAfter(Instant.now())){
+            throw new IllegalArgumentException("Birthday is invalid");
+        }
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -86,8 +89,8 @@ public class UserServiceImp implements IUserService {
         if (userRepository.findByUserId(userDTO.getUserId()) != null){
             throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
         }
-        if (userRepository.findByEmail(userDTO.getEmail()) != null){
-            throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
+        if(userDTO.getBirthday().toInstant().isAfter(Instant.now())){
+            throw new IllegalArgumentException("Birthday is invalid");
         }
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -258,6 +261,9 @@ public class UserServiceImp implements IUserService {
     @Override
     public User updateUser(String userId, UserDTO userDTO){
         User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        if (userDTO.getBirthday().toInstant().isAfter(Instant.now())){
+            throw new IllegalArgumentException("Birthday is invalid");
+        }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         if (userDTO.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));

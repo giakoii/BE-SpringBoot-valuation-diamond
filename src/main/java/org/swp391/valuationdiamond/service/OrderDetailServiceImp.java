@@ -14,14 +14,11 @@ import org.swp391.valuationdiamond.repository.primary.UserRepository;
 import java.util.List;
 
 @Service
-public class OrderDetailServiceImp {
+public class OrderDetailServiceImp{
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private EvaluationServiceRepository evaluationServiceRepository;
@@ -30,7 +27,6 @@ public class OrderDetailServiceImp {
         return orderDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-
     public OrderDetail updateOrderDeStatus(String orderDetailId, OrderDetailDTO orderDetailDTO){
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
@@ -80,8 +76,8 @@ public class OrderDetailServiceImp {
         return orderDetailRepository.findByStatus("In-Progress");
     }
 
-    //ham getall
 
+    //ham getall
     public List<OrderDetail> getAllOrderDetail() {
         return orderDetailRepository.findAll();
     }
@@ -90,6 +86,7 @@ public class OrderDetailServiceImp {
     public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull(){
         return orderDetailRepository.findByEvaluationStaffIdIsNull();
     }
+
     public OrderDetail updateOrderDeIsDiamond(String orderDetailId, OrderDetailDTO orderDetailDTO){
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
         orderDetail.setIsDiamond(orderDetailDTO.getIsDiamond());
@@ -143,6 +140,7 @@ public class OrderDetailServiceImp {
 
         return orderDetailRepository.save(orderDetail);
     }
+
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
     }

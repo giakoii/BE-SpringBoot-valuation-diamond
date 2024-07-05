@@ -6,13 +6,5 @@ import org.swp391.valuationdiamond.entity.primary.Order;
 import java.util.List;
 
 public interface IOrderService {
-    Order saveOrder(OrderDTO orderDTO);
-    List<Order> getOrders();
-    List<Order> getAllOrders();
-    List<Order> getOrderByRequest(String requestId);
-    List<Order> getOrderByUser(String userId);
-    Order updateOrderStatus(String orderId, OrderDTO orderDTO);
-    boolean deleteOrder(String orderId);
-
 
 }
