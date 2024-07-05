@@ -26,6 +26,7 @@ public class CommittedPaperServiceImp {
     //check lại logic hàm này
     //user phải là người tạo ra cái order đó, không cho nhập bừa
     public CommittedPaper createCommittedPaper(CommittedPaperDTO  committedPaperDTO) {
+       try {
         CommittedPaper committedPaper = new CommittedPaper();
         long count = committedPaperRepository.count();
         String formattedCount = String.valueOf(count + 1);
@@ -43,6 +44,9 @@ public class CommittedPaperServiceImp {
         committedPaper.setOrderId(orderId);
 
         return committedPaperRepository.save(committedPaper);
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while creating committed paper", e);
+       }
     }
 
     public CommittedPaper getCommittedPaper(String id) {

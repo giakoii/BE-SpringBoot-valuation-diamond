@@ -109,13 +109,8 @@ public class OrderServiceImp {
 
          savedOrder.setOrderDetailId(orderDetails);
          return savedOrder;
-     } catch(RuntimeException e) {
-
-         System.err.println("Error creating order: " + e.getMessage());
-         throw e;
      } catch (Exception e) {
-         System.err.println("Unexpected error: " + e.getMessage());
-         throw new RuntimeException("Unexpected error occurred while creating order", e);
+         throw new RuntimeException("An error occurred while creating the order", e);
      }
     }
 
@@ -167,13 +162,8 @@ public class OrderServiceImp {
             order.setStatus(orderDTO.getStatus());
         }
         return orderRepository.save(order);
-       } catch(RuntimeException e) {
-
-           System.err.println("Error updating order: " + e.getMessage());
-           throw e;
        } catch (Exception e) {
-           System.err.println("Unexpected error: " + e.getMessage());
-           throw new RuntimeException("Unexpected error occurred while updating order", e);
+           throw new RuntimeException("An error occurred while updating the order", e);
        }
     }
 

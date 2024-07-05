@@ -39,14 +39,9 @@ public class EvaluationServiceServiceImp {
                 .serviceDescription(evaluationServiceDTO.getServiceDescription())
                 .build();
         return evaluationServiceRepository.save(evaluationService);
-        } catch(RuntimeException e) {
-
-            System.err.println("Error creating evaluation service: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while creating evaluation service", e);
-        }
+        throw new RuntimeException("An error occurred while creating the evaluation service", e);
+    }
     }
     //============================================ Hàm update ========================================
     public EvaluationService updateService(String serviceId,EvaluationServiceDTO evaluationServiceDTO) {
@@ -60,13 +55,8 @@ public class EvaluationServiceServiceImp {
             evaluationService.setServiceDescription(evaluationServiceDTO.getServiceDescription());
         }
         return evaluationServiceRepository.save(evaluationService);
-       } catch(RuntimeException e) {
-
-           System.err.println("Error updating evaluation service: " + e.getMessage());
-           throw e;
        } catch (Exception e) {
-           System.err.println("Unexpected error: " + e.getMessage());
-           throw new RuntimeException("Unexpected error occurred while updating evaluation service", e);
+           throw new RuntimeException("An error occurred while updating the evaluation service", e);
        }
     }
     //=============================================== Các hàm Get ========================================

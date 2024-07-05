@@ -54,13 +54,8 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
         evaluationRequest.setUserId(userId);
 
         return evaluationRequestRepository.save(evaluationRequest);
-        } catch(RuntimeException e) {
-
-            System.err.println("Error creating evaluation request " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while creating evaluation request", e);
+            throw new RuntimeException("An error occurred while creating evaluation request", e);
         }
     }
 
@@ -127,13 +122,8 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
             evaluationRequest.setMeetingDate(evaluationRequestDTO.getMeetingDate());
         }
         return evaluationRequestRepository.save(evaluationRequest);
-        } catch(RuntimeException e) {
-
-            System.err.println("Error updating evaluation request: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while updating evaluation request", e);
+            throw new RuntimeException("An error occurred while updating the evaluation request", e);
         }
     }
 

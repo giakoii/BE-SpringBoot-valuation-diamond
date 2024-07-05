@@ -79,12 +79,8 @@ public class UserServiceImp implements IUserService {
         pendingUserRepository.save(pendingUser);
 
         sendOtpEmail(userDTO.getEmail(), otp);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Error creating user: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while creating user", e);
+            throw new RuntimeException("An error occurred while creating user", e);
         }
     }
 
@@ -114,12 +110,8 @@ public class UserServiceImp implements IUserService {
                     .build();
 
             return userRepository.save(user);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Error creating staff: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while creating staff", e);
+            throw new RuntimeException("An error occurred while creating staff", e);
         }
     }
     //change password
@@ -301,13 +293,8 @@ public class UserServiceImp implements IUserService {
                user.setRole(Role.valueOf(userDTO.getRole()));
            }
            return userRepository.save(user);
-       } catch(RuntimeException e) {
-
-           System.err.println("Error updating user: " + e.getMessage());
-           throw e;
        } catch (Exception e) {
-           System.err.println("Unexpected error: " + e.getMessage());
-           throw new RuntimeException("Unexpected error occurred while updating user", e);
+           throw new RuntimeException("An error occurred while updating the user", e);
        }
     }
     @Override

@@ -17,6 +17,7 @@ public class DiamondAssessmentServiceImp {
 
 
     public DiamondAssessment createDiamondAssessment(DiamondAssessmentDTO diamondAssessmentDTO){
+       try {
         DiamondAssessment diamondAssessment  = new DiamondAssessment();
 
         long count = diamondAssessmentRepository.count();
@@ -35,6 +36,9 @@ public class DiamondAssessmentServiceImp {
         diamondAssessment.setFluorescence(diamondAssessmentDTO.getFluorescence());
 
         return diamondAssessmentRepository.save(diamondAssessment);
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while creating diamond assessment", e);
+       }
 }
     public DiamondAssessment getDiamondAssessment(String id){
         return diamondAssessmentRepository.findById(id)

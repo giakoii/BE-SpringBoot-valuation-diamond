@@ -49,13 +49,8 @@ public class OrderDetailServiceImp {
             orderDetail.setServiceId(service);
         }
         return orderDetailRepository.save(orderDetail);
-        } catch(RuntimeException e) {
-
-            System.err.println("Error updating order detail: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+            throw new RuntimeException("An error occurred while updating the order detail", e);
         }
     }
 
@@ -79,13 +74,8 @@ public class OrderDetailServiceImp {
             orderDetail.setServiceId(service);
         }
         return orderDetailRepository.save(orderDetail);
-        } catch(RuntimeException e) {
-
-            System.err.println("Error updating order detail: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+            throw new RuntimeException("An error occurred while updating the order detail", e);
         }
     }
 
@@ -124,13 +114,8 @@ public class OrderDetailServiceImp {
             orderDetail.setServiceId(service);
         }
         return orderDetailRepository.save(orderDetail);
-       } catch(RuntimeException e) {
-
-           System.err.println("Error updating order detail: " + e.getMessage());
-           throw e;
        } catch (Exception e) {
-           System.err.println("Unexpected error: " + e.getMessage());
-           throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+           throw new RuntimeException("An error occurred while updating the order detail", e);
        }
     }
 
@@ -170,13 +155,8 @@ public class OrderDetailServiceImp {
         // Add more properties as needed
 
         return orderDetailRepository.save(orderDetail);
-        } catch(RuntimeException e) {
-
-            System.err.println("Error updating order detail: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+            throw new RuntimeException("An error occurred while updating the order detail", e);
         }
     }
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){

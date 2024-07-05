@@ -61,13 +61,8 @@ public class EvaluationResultServiceImp {
 
 
         return evaluationResultRepository.save(evaluationResult);
-       } catch(RuntimeException e) {
-
-           System.err.println("Error creating evaluation result: " + e.getMessage());
-           throw e;
        } catch (Exception e) {
-           System.err.println("Unexpected error: " + e.getMessage());
-           throw new RuntimeException("Unexpected error occurred while creating evaluation result", e);
+           throw new RuntimeException("An error occurred while creating the evaluation result", e);
        }
     }
 
@@ -144,13 +139,8 @@ public class EvaluationResultServiceImp {
         }
 
         return evaluationResultRepository.save(result);
-       } catch(RuntimeException e) {
-
-           System.err.println("Error updating evaluation result: " + e.getMessage());
-           throw e;
        } catch (Exception e) {
-           System.err.println("Unexpected error: " + e.getMessage());
-           throw new RuntimeException("Unexpected error occurred while updating evaluation result", e);
+           throw new RuntimeException("An error occurred while updating the evaluation result", e);
        }
     }
 }
