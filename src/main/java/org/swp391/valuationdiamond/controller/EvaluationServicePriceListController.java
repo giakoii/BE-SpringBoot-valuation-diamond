@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.EvaluationServicePriceListDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationServicePriceList;
-import org.swp391.valuationdiamond.service.EvaluationServicePriceListServiceImp;
 import org.swp391.valuationdiamond.service.IEvaluationServicePriceListService;
 
 import java.util.List;
@@ -19,27 +18,41 @@ public class EvaluationServicePriceListController {
 
     //============================================ CREATE ====================================================
     @PostMapping("/create")
-    public EvaluationServicePriceList createServicePriceList(@RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        return evaluationServicePriceListServiceImp.createServicePriceList(evaluationServicePriceListDTO);
+    public ResponseEntity<?> createServicePriceList(@RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
+        try {
+            EvaluationServicePriceList createdServicePriceList = evaluationServicePriceListServiceImp.createServicePriceList(evaluationServicePriceListDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdServicePriceList);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
 
     //============================================ GET ====================================================
     @GetMapping("/getServicePriceListByServiceId/{serviceId}")
-    public List<EvaluationServicePriceList> getPriceListByServiceId(@PathVariable("serviceId") String serviceId) {
-        return evaluationServicePriceListServiceImp.getPriceListByServiceId(serviceId);
+    public ResponseEntity<?> getPriceListByServiceId(@PathVariable("serviceId") String serviceId) {
+        try {
+            List<EvaluationServicePriceList> servicePriceList = evaluationServicePriceListServiceImp.getPriceListByServiceId(serviceId);
+            return ResponseEntity.ok(servicePriceList);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/getServicePriceLists")
-    public List<EvaluationServicePriceList> getAllEvaluationPriceList() {
-        return evaluationServicePriceListServiceImp.getAllServicePriceList();
+    public ResponseEntity<?> getAllEvaluationPriceList() {
+        try {
+            List<EvaluationServicePriceList> servicePriceLists = evaluationServicePriceListServiceImp.getAllServicePriceList();
+            return ResponseEntity.ok(servicePriceLists);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
 
-    //    @GetMapping("/calculate")
-//    public double calculatePrice(@RequestParam String serviceId, @RequestParam float sampleSize) {
-//        return evaluationServicePriceListServiceImp.calculateServicePrice(serviceId, sampleSize);
-//    }
-
-    //======================================Calculate SampleSize===========================================
+    //====================================== Calculate SampleSize ===========================================
     @GetMapping("/calculate")
     public ResponseEntity<?> calculatePrice(
             @RequestParam String serviceId,
@@ -58,21 +71,39 @@ public class EvaluationServicePriceListController {
     }
 
     @PutMapping("/updateServicePriceList/{serviceId}")
-    public List<EvaluationServicePriceList> updateByServiceId(@PathVariable String serviceId, @RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        return evaluationServicePriceListServiceImp.updateServicePriceListByServiceId(serviceId, evaluationServicePriceListDTO);
+    public ResponseEntity<?> updateByServiceId(@PathVariable String serviceId, @RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
+        try {
+            List<EvaluationServicePriceList> updatedServicePriceList = evaluationServicePriceListServiceImp.updateServicePriceListByServiceId(serviceId, evaluationServicePriceListDTO);
+            return ResponseEntity.ok(updatedServicePriceList);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
 
     @PutMapping("/updateServicePriceListById/{id}")
-    public EvaluationServicePriceList updateById(@PathVariable String id, @RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        return evaluationServicePriceListServiceImp.updateServicePriceListById(id, evaluationServicePriceListDTO);
+    public ResponseEntity<?> updateById(@PathVariable String id, @RequestBody EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
+        try {
+            EvaluationServicePriceList updatedServicePriceList = evaluationServicePriceListServiceImp.updateServicePriceListById(id, evaluationServicePriceListDTO);
+            return ResponseEntity.ok(updatedServicePriceList);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
-
 
     //============================================ DELETE ====================================================
     @DeleteMapping("/deleteServicePriceListById/{id}")
-    public EvaluationServicePriceList deleteServicePriceListById(@PathVariable("id") String id) {
-        return evaluationServicePriceListServiceImp.deleteServicePriceListById(id);
+    public ResponseEntity<?> deleteServicePriceListById(@PathVariable("id") String id) {
+        try {
+            EvaluationServicePriceList deletedServicePriceList = evaluationServicePriceListServiceImp.deleteServicePriceListById(id);
+            return ResponseEntity.ok(deletedServicePriceList);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
-
-
 }
