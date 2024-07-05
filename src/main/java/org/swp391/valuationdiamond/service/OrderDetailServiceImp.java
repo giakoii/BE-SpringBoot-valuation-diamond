@@ -32,6 +32,7 @@ public class OrderDetailServiceImp {
     }
 
     public OrderDetail updateOrderDeStatus(String orderDetailId, OrderDetailDTO orderDetailDTO){
+        try {
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
         orderDetail.setStatus(orderDetailDTO.getStatus());
@@ -48,11 +49,20 @@ public class OrderDetailServiceImp {
             orderDetail.setServiceId(service);
         }
         return orderDetailRepository.save(orderDetail);
+        } catch(RuntimeException e) {
+
+            System.err.println("Error updating order detail: " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+        }
     }
 
 
     //update thằng staff
     public OrderDetail updateOrderDeEvaluationStaff(String orderDetailId, OrderDetailDTO orderDetailDTO){
+        try {
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
         orderDetail.setEvaluationStaffId(orderDetailDTO.getEvaluationStaffId());
@@ -69,6 +79,14 @@ public class OrderDetailServiceImp {
             orderDetail.setServiceId(service);
         }
         return orderDetailRepository.save(orderDetail);
+        } catch(RuntimeException e) {
+
+            System.err.println("Error updating order detail: " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+        }
     }
 
     public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
@@ -91,6 +109,7 @@ public class OrderDetailServiceImp {
         return orderDetailRepository.findByEvaluationStaffIdIsNull();
     }
     public OrderDetail updateOrderDeIsDiamond(String orderDetailId, OrderDetailDTO orderDetailDTO){
+       try {
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
         orderDetail.setIsDiamond(orderDetailDTO.getIsDiamond());
         // Set Order
@@ -105,10 +124,19 @@ public class OrderDetailServiceImp {
             orderDetail.setServiceId(service);
         }
         return orderDetailRepository.save(orderDetail);
+       } catch(RuntimeException e) {
+
+           System.err.println("Error updating order detail: " + e.getMessage());
+           throw e;
+       } catch (Exception e) {
+           System.err.println("Unexpected error: " + e.getMessage());
+           throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+       }
     }
 
     //
     public OrderDetail updateOrderDetail(String orderDetailId, OrderDetailDTO orderDetailDTO) {
+        try {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order detail not found"));
 
         // Update properties from DTO only if they are not null
@@ -142,6 +170,14 @@ public class OrderDetailServiceImp {
         // Add more properties as needed
 
         return orderDetailRepository.save(orderDetail);
+        } catch(RuntimeException e) {
+
+            System.err.println("Error updating order detail: " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            throw new RuntimeException("Unexpected error occurred while updating order detail", e);
+        }
     }
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
