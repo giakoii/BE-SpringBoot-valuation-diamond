@@ -21,4 +21,5 @@ public interface DiamondAssessmentDB2Repository extends JpaRepository<DiamondAss
             String proportions,
             BigDecimal priceMin,
             BigDecimal priceMax);
+    DiamondAssessmentDB2 findByAssessId(String assessId);
 }

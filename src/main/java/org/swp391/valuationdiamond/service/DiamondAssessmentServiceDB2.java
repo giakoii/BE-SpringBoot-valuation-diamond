@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class DiamondAssessmentServiceDB2 {
+public class DiamondAssessmentServiceDB2 implements IDiamondAssessmentDB2{
 
     private static final Logger logger = LoggerFactory.getLogger(DiamondAssessmentServiceDB2.class);
 
@@ -65,6 +65,19 @@ public class DiamondAssessmentServiceDB2 {
         } catch (Exception e) {
             logger.error("Error finding similar diamonds: {}", e.getMessage());
             return Collections.emptyList();
+        }
+    }
+
+    public DiamondAssessmentDB2 getDiamondAssessmentById(String assessId) {
+        logger.info("Fetching diamond assessment with ID {}", assessId);
+        DiamondAssessmentDB2 assessment = diamondAssessmentDB2Repository.findByAssessId(assessId);
+        logger.info("Result from repository: {}", assessment);
+        if (assessment != null) {
+            logger.info("Found diamond assessment: {}", assessment);
+            return assessment;
+        } else {
+            logger.error("Diamond assessment with ID {} not found", assessId);
+            throw new RuntimeException("Not Found");
         }
     }
 }

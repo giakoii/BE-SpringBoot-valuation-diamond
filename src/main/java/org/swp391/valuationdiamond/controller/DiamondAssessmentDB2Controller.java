@@ -1,11 +1,11 @@
 package org.swp391.valuationdiamond.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import org.swp391.valuationdiamond.entity.secondary.DiamondAssessmentDB2;
+
 import org.swp391.valuationdiamond.service.DiamondAssessmentServiceDB2;
 
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Collections;
+
 
 @RestController
 @RequestMapping("/api/diamond-assessments")
@@ -45,6 +46,15 @@ public class DiamondAssessmentDB2Controller {
         } catch (Exception e) {
             logger.error("Error searching diamonds: {}", e.getMessage());
             return Collections.emptyList();
+        }
+    }
+    @GetMapping("/DiamondAssessmentByIDDB2/{assessId}")
+    public ResponseEntity<DiamondAssessmentDB2> getDiamondAssessment(@PathVariable ("assessId") String assessId) {
+        try {
+            DiamondAssessmentDB2 assessment = diamondAssessmentServiceDB2.getDiamondAssessmentById(assessId);
+            return ResponseEntity.ok(assessment);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
         }
     }
 }
