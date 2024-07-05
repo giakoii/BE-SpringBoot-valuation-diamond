@@ -18,5 +18,4 @@ public interface IOrderService {
     List<OrderServiceImp.MonthlyTotalPrice> sumTotalPriceWithinMonths(int numberOfMonths);
     List<OrderServiceImp.MonthlyQuantitySum> sumQuantityWithinMonths(int numberOfMonths);
     OrderServiceImp.PercentageChangeResult calculatePercentageChange();
-
 }

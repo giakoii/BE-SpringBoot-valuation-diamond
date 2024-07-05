@@ -16,10 +16,6 @@ import java.util.List;
 
 @Service
 public class CommittedPaperServiceImp  implements ICommittedPaperService{
-//    private CommittedPaperRepository committedPaperRepository;
-//    private UserRepository userRepository;
-//    private OrderRepository orderRepository;
-
     private final CommittedPaperRepository committedPaperRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
@@ -32,17 +28,16 @@ public class CommittedPaperServiceImp  implements ICommittedPaperService{
         this.orderRepository = orderRepository;
     }
 
-    //check lại logic hàm này
-    //user phải là người tạo ra cái order đó, không cho nhập bừa
     @Override
     public CommittedPaper createCommittedPaper(CommittedPaperDTO  committedPaperDTO) {
-       try {
+
         CommittedPaper committedPaper = new CommittedPaper();
         long count = committedPaperRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         String CommitId = "CO" + formattedCount + date;
 
+        try {
         committedPaper.setCommittedId(CommitId);
         committedPaper.setCommittedName(committedPaperDTO.getCommittedName());
         committedPaper.setCommittedDate(committedPaperDTO.getCommittedDate());

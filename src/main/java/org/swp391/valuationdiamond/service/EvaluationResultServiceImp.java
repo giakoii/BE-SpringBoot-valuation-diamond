@@ -32,13 +32,17 @@ public class EvaluationResultServiceImp implements IEvaluationResultService{
     //============================================ CREATE =====================================
     @Override
     public EvaluationResult createEvaluationResult(EvaluationResultDTO EvaluationResultDTO){
-       try {
+
         long count = evaluationResultRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         String ResultId = "ERS"+ date + formattedCount ;
 
+        User userId = userRepository.findById(EvaluationResultDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
+        OrderDetail orderDetail = orderDetailRepository.findById(EvaluationResultDTO.getOrderDetailId()).orElseThrow(() -> new RuntimeException("Order detail not found"));
+
+        try {
         EvaluationResult evaluationResult = EvaluationResult.builder()
                 .evaluationResultId(ResultId)
                 .diamondOrigin(EvaluationResultDTO.getDiamondOrigin())
@@ -57,15 +61,8 @@ public class EvaluationResultServiceImp implements IEvaluationResultService{
                 .img(EvaluationResultDTO.getImg())
                 .createDate(EvaluationResultDTO.getCreateDate())
                 .build();
-
-        User userId = userRepository.findById(EvaluationResultDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        evaluationResult.setUserId(userId);
-
-        OrderDetail orderDetail = orderDetailRepository.findById(EvaluationResultDTO.getOrderDetailId()).orElseThrow(() -> new RuntimeException("Order detail not found"));
-        evaluationResult.setOrderDetailId(orderDetail);
-
-
-
+            evaluationResult.setUserId(userId);
+            evaluationResult.setOrderDetailId(orderDetail);
         return evaluationResultRepository.save(evaluationResult);
        } catch (Exception e) {
            throw new RuntimeException("An error occurred while creating the evaluation result", e);
@@ -97,9 +94,9 @@ public class EvaluationResultServiceImp implements IEvaluationResultService{
     //============================================ UPDATE =====================================
     @Override
     public EvaluationResult updateResult(String resultId, EvaluationResultDTO evaluationResultDTO){
-       try {
-        EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
 
+        EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
+        try {
         if (evaluationResultDTO.getDiamondOrigin() != null) {
             result.setDiamondOrigin(evaluationResultDTO.getDiamondOrigin());
         }

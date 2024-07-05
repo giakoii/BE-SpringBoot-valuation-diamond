@@ -57,6 +57,9 @@ public class UserServiceImp implements IUserService {
         if (userRepository.findByEmail(userDTO.getEmail()) != null || pendingUserRepository.findByEmail(userDTO.getEmail()) != null){
             throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
         }
+        if(userDTO.getBirthday().toInstant().isAfter(Instant.now())){
+            throw new IllegalArgumentException("Birthday is invalid");
+        }
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -86,15 +89,15 @@ public class UserServiceImp implements IUserService {
 
     //hàm tạo account cho staff
     @Override
-    public User createStaff(UserDTO userDTO){
-        try {
+    public User createStaff(UserDTO userDTO) {
             if (userRepository.findByUserId(userDTO.getUserId()) != null) {
                 throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
             }
-            if (userRepository.findByEmail(userDTO.getEmail()) != null) {
-                throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
-            }
 
+            if(userDTO.getBirthday().toInstant().isAfter(Instant.now())){
+                throw new IllegalArgumentException("Birthday is invalid");
+            }
+        try {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
             User user = User.builder()
@@ -114,6 +117,7 @@ public class UserServiceImp implements IUserService {
             throw new RuntimeException("An error occurred while creating staff", e);
         }
     }
+
     //change password
     @Override
     public User changePassword(String userId, String oldPassword, String newPassword){
@@ -265,8 +269,11 @@ public class UserServiceImp implements IUserService {
     //=============================== Các hàm UPDATE và DELETE ==========================================
     @Override
     public User updateUser(String userId, UserDTO userDTO){
-       try {
            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+           if (userDTO.getBirthday().toInstant().isAfter(Instant.now())){
+               throw new IllegalArgumentException("Birthday is invalid");
+           }
+        try {
            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
            if (userDTO.getPassword() != null) {
                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));

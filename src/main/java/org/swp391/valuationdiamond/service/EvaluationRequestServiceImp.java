@@ -31,13 +31,13 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
     @Override
     @Transactional
     public EvaluationRequest createEvaluationRequest(EvaluationRequestDTO evaluationRequestDTO) {
-        try {
+
 
         long count = evaluationRequestRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         String requestId = "ER"+ date + formattedCount ;
-
+        try {
         EvaluationRequest evaluationRequest = EvaluationRequest.builder()
                 .requestId(requestId)
                 .requestDescription(evaluationRequestDTO.getRequestDescription())
@@ -95,11 +95,12 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
     //hàm update 'U'
     @Override
     public EvaluationRequest updateEvaluationRequest(String requestId, EvaluationRequestDTO evaluationRequestDTO) {
-        try {
+
         EvaluationRequest evaluationRequest = evaluationRequestRepository.findByRequestId(requestId);
         if (evaluationRequestRepository.findByRequestId(requestId) == null) {
             throw new RuntimeException("Evaluation Request not found");
         }
+        try {
         if (evaluationRequestDTO.getRequestDescription() != null) {
             evaluationRequest.setRequestDescription(evaluationRequestDTO.getRequestDescription());
         }
@@ -134,4 +135,5 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
 
         return evaluationRequestRepository.findByUserId(user);
     }
+
 }
