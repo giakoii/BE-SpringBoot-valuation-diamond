@@ -26,6 +26,7 @@ public class EvaluationResultServiceImp {
     //thêm try catch vào hàm create
     //============================================ CREATE =====================================
     public EvaluationResult createEvaluationResult(EvaluationResultDTO EvaluationResultDTO){
+       try {
         long count = evaluationResultRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
@@ -60,7 +61,14 @@ public class EvaluationResultServiceImp {
 
 
         return evaluationResultRepository.save(evaluationResult);
+       } catch(RuntimeException e) {
 
+           System.err.println("Error creating evaluation result: " + e.getMessage());
+           throw e;
+       } catch (Exception e) {
+           System.err.println("Unexpected error: " + e.getMessage());
+           throw new RuntimeException("Unexpected error occurred while creating evaluation result", e);
+       }
     }
 
     //============================================ GET =====================================
@@ -86,6 +94,7 @@ public class EvaluationResultServiceImp {
 
     //============================================ UPDATE =====================================
     public EvaluationResult updateResult(String resultId, EvaluationResultDTO evaluationResultDTO){
+       try {
         EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
 
         if (evaluationResultDTO.getDiamondOrigin() != null) {
@@ -135,6 +144,14 @@ public class EvaluationResultServiceImp {
         }
 
         return evaluationResultRepository.save(result);
+       } catch(RuntimeException e) {
+
+           System.err.println("Error updating evaluation result: " + e.getMessage());
+           throw e;
+       } catch (Exception e) {
+           System.err.println("Unexpected error: " + e.getMessage());
+           throw new RuntimeException("Unexpected error occurred while updating evaluation result", e);
+       }
     }
 }
 
