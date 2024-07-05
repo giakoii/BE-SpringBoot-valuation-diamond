@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
-public class OrderServiceImp {
+public class OrderServiceImp implements IOrderService {
     @Autowired
     private OrderRepository orderRepository;
 
@@ -46,6 +46,7 @@ public class OrderServiceImp {
     //=============================================== Create Order ===============================================
 
     //user --> request --> order --> orderDetail
+    @Override
     public Order saveOrder(OrderDTO orderDTO) {
      try {
          String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
@@ -115,22 +116,23 @@ public class OrderServiceImp {
     }
 
     //===============================================Methods Get Order ===============================================
-
+    @Override
     public List<Order> getOrders() {
 
         return orderRepository.findOrderByStatus("In-Progress");
     }
-
+    @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
-
+    @Override
     public Order getOrder(String id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order with id " + id + " not found"));
     }
 
     //get order by request id
+    @Override
     public List<Order> getOrderByRequest(String requestId) {
         EvaluationRequest request = evaluationRequestRepository.findById(requestId).orElseThrow(() -> new RuntimeException("Request not found"));
         return orderRepository.findOrderByRequestId(request);
@@ -139,6 +141,7 @@ public class OrderServiceImp {
     //get order by user id
 
     //order <-- tương ứng request <-- tương ứng user
+    @Override
     public List<Order> getOrderByUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -153,7 +156,7 @@ public class OrderServiceImp {
         return orderList;
     }
     //===============================================Methods Update Order ===============================================
-
+    @Override
     public Order updateOrderStatus(String orderId, OrderDTO orderDTO) {
        try {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
@@ -168,6 +171,7 @@ public class OrderServiceImp {
     }
 
     //===============================================Methods Delete Order ===============================================
+    @Override
     public boolean deleteOrder(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         orderRepository.delete(order);
@@ -197,7 +201,7 @@ public class MonthlyOrderCount {
                 '}';
     }
 }
-
+    @Override
     public List<MonthlyOrderCount> countOrdersRegisteredPerMonth(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
         List<YearMonth> months = IntStream.range(0, numberOfMonths)
@@ -273,6 +277,7 @@ public class MonthlyOrderCount {
 
         return totalPriceSum;
     }
+
     public class PercentageChangeResult {
         private BigDecimal PrevMonth;
         private BigDecimal CurrMonth;
@@ -304,6 +309,7 @@ public class MonthlyOrderCount {
             this.percentageChange = percentageChange;
         }
     }
+    @Override
     public PercentageChangeResult calculatePercentageChange() {
         BigDecimal totalPriceCurrentMonth = sumTotalPriceWithinAMonth();
         BigDecimal totalPricePreviousMonth = sumTotalPricePreviousMonth();
@@ -348,6 +354,7 @@ public class MonthlyOrderCount {
                     '}';
         }
     }
+    @Override
     public List<MonthlyTotalPrice> sumTotalPriceWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
 
@@ -405,6 +412,7 @@ public class MonthlyOrderCount {
                     '}';
         }
     }
+    @Override
     public List<MonthlyQuantitySum> sumQuantityWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
 

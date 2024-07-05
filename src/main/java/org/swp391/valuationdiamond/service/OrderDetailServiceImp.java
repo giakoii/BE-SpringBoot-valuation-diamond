@@ -14,7 +14,7 @@ import org.swp391.valuationdiamond.repository.primary.UserRepository;
 import java.util.List;
 
 @Service
-public class OrderDetailServiceImp {
+public class OrderDetailServiceImp implements IOrderDetailService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
@@ -25,12 +25,12 @@ public class OrderDetailServiceImp {
 
     @Autowired
     private EvaluationServiceRepository evaluationServiceRepository;
-
+    @Override
     public OrderDetail getOrderDetailId(String id){
         return orderDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-
+    @Override
     public OrderDetail updateOrderDeStatus(String orderDetailId, OrderDetailDTO orderDetailDTO){
         try {
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
@@ -56,6 +56,7 @@ public class OrderDetailServiceImp {
 
 
     //update thằng staff
+    @Override
     public OrderDetail updateOrderDeEvaluationStaff(String orderDetailId, OrderDetailDTO orderDetailDTO){
         try {
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
@@ -78,26 +79,28 @@ public class OrderDetailServiceImp {
             throw new RuntimeException("An error occurred while updating the order detail", e);
         }
     }
-
+    @Override
     public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         return orderDetailRepository.findByOrderId(order);
     }
-
+    @Override
     public List<OrderDetail> getOrderDetailsByOrderStatusInProgress() {
         return orderDetailRepository.findByStatus("In-Progress");
     }
 
     //ham getall
-
+    @Override
     public List<OrderDetail> getAllOrderDetail() {
         return orderDetailRepository.findAll();
     }
 
     //hàm get staff == null
+    @Override
     public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull(){
         return orderDetailRepository.findByEvaluationStaffIdIsNull();
     }
+    @Override
     public OrderDetail updateOrderDeIsDiamond(String orderDetailId, OrderDetailDTO orderDetailDTO){
        try {
         OrderDetail orderDetail = getOrderDetailId(orderDetailId);
@@ -120,6 +123,7 @@ public class OrderDetailServiceImp {
     }
 
     //
+    @Override
     public OrderDetail updateOrderDetail(String orderDetailId, OrderDetailDTO orderDetailDTO) {
         try {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order detail not found"));
@@ -159,6 +163,7 @@ public class OrderDetailServiceImp {
             throw new RuntimeException("An error occurred while updating the order detail", e);
         }
     }
+    @Override
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
     }
@@ -184,6 +189,7 @@ public class OrderDetailServiceImp {
                     '}';
         }
     }
+    @Override
     public long countByEvaluationStaffIdIsNull(){
         return orderDetailRepository.countByEvaluationStaffIdIsNull();
     }

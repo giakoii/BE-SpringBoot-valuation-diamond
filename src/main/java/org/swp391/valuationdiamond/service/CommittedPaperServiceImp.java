@@ -15,16 +15,26 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class CommittedPaperServiceImp {
+public class CommittedPaperServiceImp  implements ICommittedPaperService{
+//    private CommittedPaperRepository committedPaperRepository;
+//    private UserRepository userRepository;
+//    private OrderRepository orderRepository;
+
+    private final CommittedPaperRepository committedPaperRepository;
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+
     @Autowired
-    private CommittedPaperRepository committedPaperRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderRepository orderRepository;
+    public CommittedPaperServiceImp(CommittedPaperRepository committedPaperRepository,
+                                    UserRepository userRepository, OrderRepository orderRepository) {
+        this.committedPaperRepository = committedPaperRepository;
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
+    }
 
     //check lại logic hàm này
     //user phải là người tạo ra cái order đó, không cho nhập bừa
+    @Override
     public CommittedPaper createCommittedPaper(CommittedPaperDTO  committedPaperDTO) {
        try {
         CommittedPaper committedPaper = new CommittedPaper();
@@ -48,19 +58,21 @@ public class CommittedPaperServiceImp {
            throw new RuntimeException("An error occurred while creating committed paper", e);
        }
     }
-
+    @Override
     public CommittedPaper getCommittedPaper(String id) {
         return committedPaperRepository.findById(id).orElseThrow(() -> new RuntimeException("Commit not found"));
     }
-
+    @Override
     public List<CommittedPaper> getCommittedPaperByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return committedPaperRepository.findByUserId(user);
     }
+    @Override
     public CommittedPaper getCommittedPaperByOrderId(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         return committedPaperRepository.findFirstByOrderId(order);
     }
+    @Override
     public List<CommittedPaper> getAllCommittedPaper() {
         return committedPaperRepository.findAll();
     }

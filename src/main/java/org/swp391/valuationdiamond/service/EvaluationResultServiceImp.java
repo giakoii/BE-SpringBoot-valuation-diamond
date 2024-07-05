@@ -15,16 +15,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class EvaluationResultServiceImp {
+public class EvaluationResultServiceImp implements IEvaluationResultService{
+
+    private final EvaluationResultRepository evaluationResultRepository;
+    private final UserRepository userRepository;
+    private final OrderDetailRepository orderDetailRepository;
     @Autowired
-    private EvaluationResultRepository evaluationResultRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    public EvaluationResultServiceImp(EvaluationResultRepository evaluationResultRepository,
+                                      UserRepository userRepository, OrderDetailRepository orderDetailRepository) {
+        this.evaluationResultRepository = evaluationResultRepository;
+        this.userRepository = userRepository;
+        this.orderDetailRepository = orderDetailRepository;
+    }
 
     //thêm try catch vào hàm create
     //============================================ CREATE =====================================
+    @Override
     public EvaluationResult createEvaluationResult(EvaluationResultDTO EvaluationResultDTO){
        try {
         long count = evaluationResultRepository.count();
@@ -67,27 +73,29 @@ public class EvaluationResultServiceImp {
     }
 
     //============================================ GET =====================================
+    @Override
     public EvaluationResult getEvaluationResult(String id){
         return evaluationResultRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-
+    @Override
     public EvaluationResult getResultByOrderDetailId(String orderDetailId) {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order Detail not found"));
         return evaluationResultRepository.findFirstByOrderDetailId(orderDetail);
     }
-
+    @Override
     public List<EvaluationResult> getResultByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         return evaluationResultRepository.findByUserId(user);
     }
-
+    @Override
     public List<EvaluationResult> getAllEvaluationResult() {
         return evaluationResultRepository.findAll();
     }
 
     //============================================ UPDATE =====================================
+    @Override
     public EvaluationResult updateResult(String resultId, EvaluationResultDTO evaluationResultDTO){
        try {
         EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));

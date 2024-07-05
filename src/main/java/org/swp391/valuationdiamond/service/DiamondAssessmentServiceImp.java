@@ -11,11 +11,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class DiamondAssessmentServiceImp {
+public class DiamondAssessmentServiceImp implements IDiamondAssessmentService {
+    private final DiamondAssessmentRepository diamondAssessmentRepository;
+
     @Autowired
-    private DiamondAssessmentRepository diamondAssessmentRepository;
-
-
+    public DiamondAssessmentServiceImp(DiamondAssessmentRepository diamondAssessmentRepository) {
+        this.diamondAssessmentRepository = diamondAssessmentRepository;
+    }
+    @Override
     public DiamondAssessment createDiamondAssessment(DiamondAssessmentDTO diamondAssessmentDTO){
        try {
         DiamondAssessment diamondAssessment  = new DiamondAssessment();
@@ -40,11 +43,12 @@ public class DiamondAssessmentServiceImp {
            throw new RuntimeException("An error occurred while creating diamond assessment", e);
        }
 }
+    @Override
     public DiamondAssessment getDiamondAssessment(String id){
         return diamondAssessmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-
+    @Override
     public List<DiamondAssessment> getDiamondAssessmentList() {
         return diamondAssessmentRepository.findAll();
     }

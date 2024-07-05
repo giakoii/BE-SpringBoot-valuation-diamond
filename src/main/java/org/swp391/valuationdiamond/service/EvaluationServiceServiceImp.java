@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 @Service
-public class EvaluationServiceServiceImp {
+public class EvaluationServiceServiceImp implements IEvaluationServiceService {
     @Autowired
     EvaluationServiceRepository evaluationServiceRepository;
 
@@ -25,6 +25,7 @@ public class EvaluationServiceServiceImp {
     OrderDetailRepository orderDetailRepository;
 
     //============================================ Hàm create ========================================
+    @Override
     public EvaluationService createService(EvaluationServiceDTO evaluationServiceDTO) {
         try {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
@@ -44,6 +45,7 @@ public class EvaluationServiceServiceImp {
     }
     }
     //============================================ Hàm update ========================================
+    @Override
     public EvaluationService updateService(String serviceId,EvaluationServiceDTO evaluationServiceDTO) {
        try {
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
@@ -60,10 +62,11 @@ public class EvaluationServiceServiceImp {
        }
     }
     //=============================================== Các hàm Get ========================================
+    @Override
     public List<EvaluationService> getServices() {
         return  evaluationServiceRepository.findAll();
     }
-
+    @Override
     public EvaluationService getServiceById(String serviceId) {
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
@@ -71,6 +74,7 @@ public class EvaluationServiceServiceImp {
     }
 
     //============================================ Hàm delete ========================================
+    @Override
     public boolean deleteServiceById(String serviceId){
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
