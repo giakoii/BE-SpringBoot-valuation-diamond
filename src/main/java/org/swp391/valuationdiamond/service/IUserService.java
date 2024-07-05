@@ -26,4 +26,5 @@ public interface IUserService {
 //    void sendOtpEmail(String email, String otp) throws MessagingException;
     boolean deletePendingUser(String userId);
     long countUsers();
+    User changePassword(String userId, String oldPassword, String newPassword);
 }

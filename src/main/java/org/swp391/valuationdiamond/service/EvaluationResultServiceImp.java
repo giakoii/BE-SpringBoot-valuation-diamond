@@ -15,19 +15,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class EvaluationResultServiceImp {
-    @Autowired
-    private EvaluationResultRepository evaluationResultRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+public class EvaluationResultServiceImp implements IEvaluationResultService{
 
-    //check xem khi người dùng nhập có đúng cái luồng như này không
-    //thằng user đó có phải là người tạo ra cái order detail đó không
-    //user --> request --> order --> orderDetail --> evaluationResult
+    private final EvaluationResultRepository evaluationResultRepository;
+    private final UserRepository userRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    @Autowired
+    public EvaluationResultServiceImp(EvaluationResultRepository evaluationResultRepository,
+                                      UserRepository userRepository, OrderDetailRepository orderDetailRepository) {
+        this.evaluationResultRepository = evaluationResultRepository;
+        this.userRepository = userRepository;
+        this.orderDetailRepository = orderDetailRepository;
+    }
+
+    //thêm try catch vào hàm create
     //============================================ CREATE =====================================
+    @Override
     public EvaluationResult createEvaluationResult(EvaluationResultDTO EvaluationResultDTO){
+       try {
         long count = evaluationResultRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
@@ -62,32 +67,37 @@ public class EvaluationResultServiceImp {
 
 
         return evaluationResultRepository.save(evaluationResult);
-
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while creating the evaluation result", e);
+       }
     }
 
     //============================================ GET =====================================
+    @Override
     public EvaluationResult getEvaluationResult(String id){
         return evaluationResultRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-
+    @Override
     public EvaluationResult getResultByOrderDetailId(String orderDetailId) {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order Detail not found"));
         return evaluationResultRepository.findFirstByOrderDetailId(orderDetail);
     }
-
-    //check lại logic như hàm create
+    @Override
     public List<EvaluationResult> getResultByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         return evaluationResultRepository.findByUserId(user);
     }
-
+    @Override
     public List<EvaluationResult> getAllEvaluationResult() {
         return evaluationResultRepository.findAll();
     }
 
+    //============================================ UPDATE =====================================
+    @Override
     public EvaluationResult updateResult(String resultId, EvaluationResultDTO evaluationResultDTO){
+       try {
         EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
 
         if (evaluationResultDTO.getDiamondOrigin() != null) {
@@ -137,6 +147,9 @@ public class EvaluationResultServiceImp {
         }
 
         return evaluationResultRepository.save(result);
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while updating the evaluation result", e);
+       }
     }
 }
 
