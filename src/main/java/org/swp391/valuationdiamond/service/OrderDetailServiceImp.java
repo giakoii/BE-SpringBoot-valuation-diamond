@@ -14,7 +14,7 @@ import org.swp391.valuationdiamond.repository.primary.UserRepository;
 import java.util.List;
 
 @Service
-public class OrderDetailServiceImp{
+public class OrderDetailServiceImp implements IOrderDetailService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
@@ -23,127 +23,155 @@ public class OrderDetailServiceImp{
     @Autowired
     private EvaluationServiceRepository evaluationServiceRepository;
 
-    public OrderDetail getOrderDetailId(String id){
+    @Override
+    public OrderDetail getOrderDetailId(String id) {
         return orderDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-    public OrderDetail updateOrderDeStatus(String orderDetailId, OrderDetailDTO orderDetailDTO){
-        OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
-        orderDetail.setStatus(orderDetailDTO.getStatus());
+    @Override
+    public OrderDetail updateOrderDeStatus(String orderDetailId, OrderDetailDTO orderDetailDTO) {
+        try {
+            OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
-        // Set Order
-        if (orderDetailDTO.getOrderId() != null) {
-            Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElse(null);
-            orderDetail.setOrderId(order);
+            orderDetail.setStatus(orderDetailDTO.getStatus());
+
+            // Set Order
+            if (orderDetailDTO.getOrderId() != null) {
+                Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElse(null);
+                orderDetail.setOrderId(order);
+            }
+
+            // Set Service
+            if (orderDetailDTO.getServiceId() != null) {
+                EvaluationService service = evaluationServiceRepository.findById(orderDetailDTO.getServiceId()).orElse(null);
+                orderDetail.setServiceId(service);
+            }
+            return orderDetailRepository.save(orderDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the order detail", e);
         }
-
-        // Set Service
-        if (orderDetailDTO.getServiceId() != null) {
-            EvaluationService service = evaluationServiceRepository.findById(orderDetailDTO.getServiceId()).orElse(null);
-            orderDetail.setServiceId(service);
-        }
-        return orderDetailRepository.save(orderDetail);
     }
 
 
     //update thằng staff
-    public OrderDetail updateOrderDeEvaluationStaff(String orderDetailId, OrderDetailDTO orderDetailDTO){
-        OrderDetail orderDetail = getOrderDetailId(orderDetailId);
+    @Override
+    public OrderDetail updateOrderDeEvaluationStaff(String orderDetailId, OrderDetailDTO orderDetailDTO) {
+        try {
+            OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
-        orderDetail.setEvaluationStaffId(orderDetailDTO.getEvaluationStaffId());
+            orderDetail.setEvaluationStaffId(orderDetailDTO.getEvaluationStaffId());
 
-        // Set Order
-        if (orderDetailDTO.getOrderId() != null) {
-            Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElse(null);
-            orderDetail.setOrderId(order);
+            // Set Order
+            if (orderDetailDTO.getOrderId() != null) {
+                Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElse(null);
+                orderDetail.setOrderId(order);
+            }
+
+            // Set Service
+            if (orderDetailDTO.getServiceId() != null) {
+                EvaluationService service = evaluationServiceRepository.findById(orderDetailDTO.getServiceId()).orElse(null);
+                orderDetail.setServiceId(service);
+            }
+            return orderDetailRepository.save(orderDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the order detail", e);
         }
-
-        // Set Service
-        if (orderDetailDTO.getServiceId() != null) {
-            EvaluationService service = evaluationServiceRepository.findById(orderDetailDTO.getServiceId()).orElse(null);
-            orderDetail.setServiceId(service);
-        }
-        return orderDetailRepository.save(orderDetail);
     }
 
+    @Override
     public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         return orderDetailRepository.findByOrderId(order);
     }
 
+    @Override
     public List<OrderDetail> getOrderDetailsByOrderStatusInProgress() {
         return orderDetailRepository.findByStatus("In-Progress");
     }
 
-
     //ham getall
+    @Override
     public List<OrderDetail> getAllOrderDetail() {
         return orderDetailRepository.findAll();
     }
 
     //hàm get staff == null
-    public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull(){
+    @Override
+    public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull() {
         return orderDetailRepository.findByEvaluationStaffIdIsNull();
     }
 
-    public OrderDetail updateOrderDeIsDiamond(String orderDetailId, OrderDetailDTO orderDetailDTO){
-        OrderDetail orderDetail = getOrderDetailId(orderDetailId);
-        orderDetail.setIsDiamond(orderDetailDTO.getIsDiamond());
-        // Set Order
-        if (orderDetailDTO.getOrderId() != null) {
-            Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElse(null);
-            orderDetail.setOrderId(order);
-        }
+    @Override
+    public OrderDetail updateOrderDeIsDiamond(String orderDetailId, OrderDetailDTO orderDetailDTO) {
+        try {
+            OrderDetail orderDetail = getOrderDetailId(orderDetailId);
+            orderDetail.setIsDiamond(orderDetailDTO.getIsDiamond());
+            // Set Order
+            if (orderDetailDTO.getOrderId() != null) {
+                Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElse(null);
+                orderDetail.setOrderId(order);
+            }
 
-        // Set Service
-        if (orderDetailDTO.getServiceId() != null) {
-            EvaluationService service = evaluationServiceRepository.findById(orderDetailDTO.getServiceId()).orElse(null);
-            orderDetail.setServiceId(service);
+            // Set Service
+            if (orderDetailDTO.getServiceId() != null) {
+                EvaluationService service = evaluationServiceRepository.findById(orderDetailDTO.getServiceId()).orElse(null);
+                orderDetail.setServiceId(service);
+            }
+            return orderDetailRepository.save(orderDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the order detail", e);
         }
-        return orderDetailRepository.save(orderDetail);
     }
 
     //
+    @Override
     public OrderDetail updateOrderDetail(String orderDetailId, OrderDetailDTO orderDetailDTO) {
-        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order detail not found"));
 
-        // Update properties from DTO only if they are not null
-        if (orderDetailDTO.getOrderDetailId() != null) {
-            orderDetail.setOrderDetailId(orderDetailDTO.getOrderDetailId());
-        }
-        if (orderDetailDTO.getEvaluationStaffId() != null) {
-            orderDetail.setEvaluationStaffId(orderDetailDTO.getEvaluationStaffId());
-        }
-        if (orderDetailDTO.getStatus() != null) {
-            orderDetail.setStatus(orderDetailDTO.getStatus());
-        }
-        if (orderDetailDTO.getUnitPrice() != null) {
-            orderDetail.setUnitPrice(orderDetailDTO.getUnitPrice());
-        }
-        if (orderDetailDTO.getReceivedDate() != null) {
-            orderDetail.setReceivedDate(orderDetailDTO.getReceivedDate());
-        }
-        if (orderDetailDTO.getExpiredReceivedDate() != null) {
-            orderDetail.setExpiredReceivedDate(orderDetailDTO.getExpiredReceivedDate());
-        }
-        if (orderDetailDTO.getImg() != null) {
-            orderDetail.setImg(orderDetailDTO.getImg());
-        }
-        if (orderDetailDTO.getSize() != null) {
-            orderDetail.setSize(orderDetailDTO.getSize());
-        }
-        if (orderDetailDTO.getIsDiamond() != null) {
-            orderDetail.setIsDiamond(orderDetailDTO.getIsDiamond());
-        }
-        // Add more properties as needed
+            OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order detail not found"));
+        try {
+            // Update properties from DTO only if they are not null
+            if (orderDetailDTO.getOrderDetailId() != null) {
+                orderDetail.setOrderDetailId(orderDetailDTO.getOrderDetailId());
+            }
+            if (orderDetailDTO.getEvaluationStaffId() != null) {
+                orderDetail.setEvaluationStaffId(orderDetailDTO.getEvaluationStaffId());
+            }
+            if (orderDetailDTO.getStatus() != null) {
+                orderDetail.setStatus(orderDetailDTO.getStatus());
+            }
+            if (orderDetailDTO.getUnitPrice() != null) {
+                orderDetail.setUnitPrice(orderDetailDTO.getUnitPrice());
+            }
+            if (orderDetailDTO.getReceivedDate() != null) {
+                orderDetail.setReceivedDate(orderDetailDTO.getReceivedDate());
+            }
+            if (orderDetailDTO.getExpiredReceivedDate() != null) {
+                orderDetail.setExpiredReceivedDate(orderDetailDTO.getExpiredReceivedDate());
+            }
+            if (orderDetailDTO.getImg() != null) {
+                orderDetail.setImg(orderDetailDTO.getImg());
+            }
+            if (orderDetailDTO.getSize() != null) {
+                orderDetail.setSize(orderDetailDTO.getSize());
+            }
+            if (orderDetailDTO.getIsDiamond() != null) {
+                orderDetail.setIsDiamond(orderDetailDTO.getIsDiamond());
+            }
+            // Add more properties as needed
 
-        return orderDetailRepository.save(orderDetail);
+            return orderDetailRepository.save(orderDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the order detail", e);
+        }
     }
 
-    public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId){
+
+    @Override
+    public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId) {
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
     }
+
     public static class OrderDetailCountResponse {
         private long Count;
 
@@ -166,7 +194,9 @@ public class OrderDetailServiceImp{
                     '}';
         }
     }
-    public long countByEvaluationStaffIdIsNull(){
+
+    @Override
+    public long countByEvaluationStaffIdIsNull() {
         return orderDetailRepository.countByEvaluationStaffIdIsNull();
     }
 }

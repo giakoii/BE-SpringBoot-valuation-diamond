@@ -37,7 +37,7 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         String requestId = "ER"+ date + formattedCount ;
-
+        try {
         EvaluationRequest evaluationRequest = EvaluationRequest.builder()
                 .requestId(requestId)
                 .requestDescription(evaluationRequestDTO.getRequestDescription())
@@ -54,6 +54,9 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
         evaluationRequest.setUserId(userId);
 
         return evaluationRequestRepository.save(evaluationRequest);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while creating evaluation request", e);
+        }
     }
 
     //Hàm read 1 evaluation request 'R'
@@ -92,10 +95,12 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
     //hàm update 'U'
     @Override
     public EvaluationRequest updateEvaluationRequest(String requestId, EvaluationRequestDTO evaluationRequestDTO) {
+
         EvaluationRequest evaluationRequest = evaluationRequestRepository.findByRequestId(requestId);
         if (evaluationRequestRepository.findByRequestId(requestId) == null) {
             throw new RuntimeException("Evaluation Request not found");
         }
+        try {
         if (evaluationRequestDTO.getRequestDescription() != null) {
             evaluationRequest.setRequestDescription(evaluationRequestDTO.getRequestDescription());
         }
@@ -118,6 +123,9 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
             evaluationRequest.setMeetingDate(evaluationRequestDTO.getMeetingDate());
         }
         return evaluationRequestRepository.save(evaluationRequest);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the evaluation request", e);
+        }
     }
 
 

@@ -8,12 +8,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.swp391.valuationdiamond.entity.secondary.DiamondAssessmentDB2;
 import org.swp391.valuationdiamond.service.DiamondAssessmentServiceDB2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/diamond-assessments")
 public class DiamondAssessmentDB2Controller {
+
+    private static final Logger logger = LoggerFactory.getLogger(DiamondAssessmentDB2Controller.class);
 
     @Autowired
     private DiamondAssessmentServiceDB2 diamondAssessmentServiceDB2;
@@ -32,8 +38,13 @@ public class DiamondAssessmentDB2Controller {
             @RequestParam(required = false) BigDecimal priceMin,
             @RequestParam(required = false) BigDecimal priceMax) {
 
-        return diamondAssessmentServiceDB2.findSimilarDiamonds(
-                assessCarat, assessShapeCut, assessCut, fluorescence, symmetry,
-                assessColor, assessClarity, assessOrigin, proportions, priceMin, priceMax);
+        try {
+            return diamondAssessmentServiceDB2.findSimilarDiamonds(
+                    assessCarat, assessShapeCut, assessCut, fluorescence, symmetry,
+                    assessColor, assessClarity, assessOrigin, proportions, priceMin, priceMax);
+        } catch (Exception e) {
+            logger.error("Error searching diamonds: {}", e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }

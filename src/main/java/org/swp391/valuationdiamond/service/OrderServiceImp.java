@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
-public class OrderServiceImp{
+public class OrderServiceImp implements IOrderService {
     @Autowired
     private OrderRepository orderRepository;
 
@@ -46,7 +46,9 @@ public class OrderServiceImp{
     //=============================================== Create Order ===============================================
 
     //user --> request --> order --> orderDetail
+    @Override
     public Order saveOrder(OrderDTO orderDTO) {
+
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 
         User user = userRepository.findById(orderDTO.getUserId())
@@ -55,29 +57,25 @@ public class OrderServiceImp{
         EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId())
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
-//        if (orderDTO.getOrderDate().toInstant().isBefore()){
-//        EvaluationRequest requestByUser = evaluationRequestRepository.findByUserId(user)
-//                .stream()
-//                .filter(r -> r.equals(request))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Request by " + orderDTO.getUserId() + " not found"));
-
         long count = orderRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String orderId = "Or" + date + formattedCount;
-
-        Order order = Order.builder()
-                .orderId(orderId)
-                .customerName(orderDTO.getCustomerName())
-                .phone(orderDTO.getPhone())
-                .diamondQuantity(orderDTO.getDiamondQuantity())
-                .orderDate(orderDTO.getOrderDate())
-                .status("In-Progress")
-                .totalPrice(orderDTO.getTotalPrice())
-                .userId(user)
-                .requestId(request)
-                .build();
-
+        Order order;
+        try {
+            order = Order.builder()
+                    .orderId(orderId)
+                    .customerName(orderDTO.getCustomerName())
+                    .phone(orderDTO.getPhone())
+                    .diamondQuantity(orderDTO.getDiamondQuantity())
+                    .orderDate(orderDTO.getOrderDate())
+                    .status("In-Progress")
+                    .totalPrice(orderDTO.getTotalPrice())
+                    .userId(user)
+                    .requestId(request)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while creating the order", e);
+        }
         Order savedOrder = orderRepository.save(order);
 
         List<OrderDetail> orderDetails = orderDTO.getOrderDetails().stream()
@@ -88,21 +86,24 @@ public class OrderServiceImp{
                     long countDetail = orderDetailRepository.count();
                     String formattedCountDetail = String.valueOf(countDetail + 1);
                     String orderDetailId = "OD" + date + formattedCountDetail;
-
-                    OrderDetail orderDetail = OrderDetail.builder()
-                            .orderDetailId(orderDetailId)
-                            .receivedDate(od.getReceivedDate())
-                            .expiredReceivedDate(od.getExpiredReceivedDate())
-                            .unitPrice(od.getUnitPrice())
-                            .size(od.getSize())
-                            .isDiamond(od.getIsDiamond())
-                            .img(od.getImg())
-                            .status("In-Progress")
-                            .serviceId(service)
-                            .evaluationStaffId(od.getEvaluationStaffId())
-                            .orderId(savedOrder)
-                            .build();
-
+                    OrderDetail orderDetail;
+                    try {
+                        orderDetail = OrderDetail.builder()
+                                .orderDetailId(orderDetailId)
+                                .receivedDate(od.getReceivedDate())
+                                .expiredReceivedDate(od.getExpiredReceivedDate())
+                                .unitPrice(od.getUnitPrice())
+                                .size(od.getSize())
+                                .isDiamond(od.getIsDiamond())
+                                .img(od.getImg())
+                                .status("In-Progress")
+                                .serviceId(service)
+                                .evaluationStaffId(od.getEvaluationStaffId())
+                                .orderId(savedOrder)
+                                .build();
+                    } catch (Exception e) {
+                        throw new RuntimeException("An error occurred while creating the order detail", e);
+                    }
                     return orderDetailRepository.save(orderDetail);
                 })
                 .collect(Collectors.toList());
@@ -112,21 +113,23 @@ public class OrderServiceImp{
     }
 
     //===============================================Methods Get Order ===============================================
+    @Override
     public List<Order> getOrders() {
 
         return orderRepository.findOrderByStatus("In-Progress");
     }
-
+    @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
-
+    @Override
     public Order getOrder(String id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order with id " + id + " not found"));
     }
 
     //get order by request id
+    @Override
     public List<Order> getOrderByRequest(String requestId) {
         EvaluationRequest request = evaluationRequestRepository.findById(requestId).orElseThrow(() -> new RuntimeException("Request not found"));
         return orderRepository.findOrderByRequestId(request);
@@ -135,6 +138,7 @@ public class OrderServiceImp{
     //get order by user id
 
     //order <-- tương ứng request <-- tương ứng user
+    @Override
     public List<Order> getOrderByUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -149,17 +153,23 @@ public class OrderServiceImp{
         return orderList;
     }
     //===============================================Methods Update Order ===============================================
+    @Override
     public Order updateOrderStatus(String orderId, OrderDTO orderDTO) {
+       try {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (orderDTO.getStatus() != null) {
             order.setStatus(orderDTO.getStatus());
         }
         return orderRepository.save(order);
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while updating the order", e);
+       }
     }
 
 
     //===============================================Methods Delete Order ===============================================
+    @Override
     public boolean deleteOrder(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         orderRepository.delete(order);
@@ -189,7 +199,7 @@ public class MonthlyOrderCount {
                 '}';
     }
 }
-
+    @Override
     public List<MonthlyOrderCount> countOrdersRegisteredPerMonth(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
         List<YearMonth> months = IntStream.range(0, numberOfMonths)
@@ -265,6 +275,7 @@ public class MonthlyOrderCount {
 
         return totalPriceSum;
     }
+
     public class PercentageChangeResult {
         private BigDecimal PrevMonth;
         private BigDecimal CurrMonth;
@@ -296,6 +307,7 @@ public class MonthlyOrderCount {
             this.percentageChange = percentageChange;
         }
     }
+    @Override
     public PercentageChangeResult calculatePercentageChange() {
         BigDecimal totalPriceCurrentMonth = sumTotalPriceWithinAMonth();
         BigDecimal totalPricePreviousMonth = sumTotalPricePreviousMonth();
@@ -340,6 +352,7 @@ public class MonthlyOrderCount {
                     '}';
         }
     }
+    @Override
     public List<MonthlyTotalPrice> sumTotalPriceWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
 
@@ -397,6 +410,7 @@ public class MonthlyOrderCount {
                     '}';
         }
     }
+    @Override
     public List<MonthlyQuantitySum> sumQuantityWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
 

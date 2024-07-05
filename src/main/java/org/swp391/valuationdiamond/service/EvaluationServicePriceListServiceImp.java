@@ -28,7 +28,7 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     //============================================ CREATE ====================================================
     @Override
     public EvaluationServicePriceList createServicePriceList(EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        try {
+
             long count = evaluationServicePriceListRepository.count();
             String formattedCount = String.valueOf(count + 1);
             String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
@@ -39,6 +39,7 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
             }
 
             EvaluationService evaluationService = evaluationServiceRepository.findById(evaluationServicePriceListDTO.getServiceId()).orElseThrow(() -> new RuntimeException("Service not found"));
+            try {
             EvaluationServicePriceList evaluationServicePriceList = EvaluationServicePriceList.builder()
                     .priceList(servicePriceList)
                     .initPrice(evaluationServicePriceListDTO.getInitPrice())
@@ -99,12 +100,11 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     //UPDATE PRICE LIST BY SERVICE ID
     @Override
     public List<EvaluationServicePriceList> updateServicePriceListByServiceId(String serviceId, EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-        try {
             List<EvaluationServicePriceList> evaluationServicePriceLists = evaluationServicePriceListRepository.findByServiceId(evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found")));
 
             EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found"));
             EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findByServiceId(evaluationService).stream().findFirst().orElseThrow(() -> new RuntimeException("Price list not found with " + serviceId + " service id"));
-
+        try {
             if (evaluationServicePriceListDTO.getSizeFrom() != null) {
                 evaluationServicePriceList.setSizeFrom(evaluationServicePriceListDTO.getSizeFrom());
             }

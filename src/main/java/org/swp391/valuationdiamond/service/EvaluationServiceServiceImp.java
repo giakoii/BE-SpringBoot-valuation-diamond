@@ -13,8 +13,9 @@ import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 @Service
-public class EvaluationServiceServiceImp implements IEvaluationServiceService{
+public class EvaluationServiceServiceImp implements IEvaluationServiceService {
     @Autowired
     EvaluationServiceRepository evaluationServiceRepository;
 
@@ -27,36 +28,47 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService{
     //============================================ Hàm create ========================================
     @Override
     public EvaluationService createService(EvaluationServiceDTO evaluationServiceDTO) {
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+        try {
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 
-        long count = evaluationServiceRepository.count();
-        String formattedCount = String.valueOf(count + 1);
-        String serviceId = "SV" + date + formattedCount;
+            long count = evaluationServiceRepository.count();
+            String formattedCount = String.valueOf(count + 1);
+            String serviceId = "SV" + date + formattedCount;
 
-        EvaluationService evaluationService = EvaluationService.builder()
-                .serviceId(serviceId)
-                .serviceType(evaluationServiceDTO.getServiceType())
-                .serviceDescription(evaluationServiceDTO.getServiceDescription())
-                .build();
-        return evaluationServiceRepository.save(evaluationService);
+            EvaluationService evaluationService = EvaluationService.builder()
+                    .serviceId(serviceId)
+                    .serviceType(evaluationServiceDTO.getServiceType())
+                    .serviceDescription(evaluationServiceDTO.getServiceDescription())
+                    .build();
+            return evaluationServiceRepository.save(evaluationService);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while creating the evaluation service", e);
+        }
     }
+
     //============================================ Hàm update ========================================
     @Override
-    public EvaluationService updateService(String serviceId,EvaluationServiceDTO evaluationServiceDTO) {
+    public EvaluationService updateService(String serviceId, EvaluationServiceDTO evaluationServiceDTO) {
+
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
-        if(evaluationServiceDTO.getServiceType() != null){
-            evaluationService.setServiceType(evaluationServiceDTO.getServiceType());
+        try {
+            if (evaluationServiceDTO.getServiceType() != null) {
+                evaluationService.setServiceType(evaluationServiceDTO.getServiceType());
+            }
+            if (evaluationServiceDTO.getServiceDescription() != null) {
+                evaluationService.setServiceDescription(evaluationServiceDTO.getServiceDescription());
+            }
+            return evaluationServiceRepository.save(evaluationService);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the evaluation service", e);
         }
-        if(evaluationServiceDTO.getServiceDescription() != null){
-            evaluationService.setServiceDescription(evaluationServiceDTO.getServiceDescription());
-        }
-        return evaluationServiceRepository.save(evaluationService);
     }
+
     //=============================================== Các hàm Get ========================================
     @Override
     public List<EvaluationService> getServices() {
-        return  evaluationServiceRepository.findAll();
+        return evaluationServiceRepository.findAll();
     }
 
     @Override
@@ -68,7 +80,7 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService{
 
     //============================================ Hàm delete ========================================
     @Override
-    public boolean deleteServiceById(String serviceId){
+    public boolean deleteServiceById(String serviceId) {
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
         evaluationServiceRepository.delete(evaluationService);

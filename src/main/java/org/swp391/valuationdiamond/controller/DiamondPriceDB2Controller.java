@@ -8,10 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.swp391.valuationdiamond.service.DiamondPriceServiceDB2;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/getDB2/calculate")
 public class DiamondPriceDB2Controller {
+
+    private static final Logger logger = LoggerFactory.getLogger(DiamondPriceDB2Controller.class);
 
     @Autowired
     private DiamondPriceServiceDB2 diamondPriceServiceDB2;
@@ -28,6 +33,11 @@ public class DiamondPriceDB2Controller {
             @RequestParam String clarity,
             @RequestParam String diamondOrigin) {
 
-        return diamondPriceServiceDB2.calculateFinalPrice(caratWeight, shape, cut, fluorescence, symmetry, polish, color, clarity, diamondOrigin);
+        try {
+            return diamondPriceServiceDB2.calculateFinalPrice(caratWeight, shape, cut, fluorescence, symmetry, polish, color, clarity, diamondOrigin);
+        } catch (Exception e) {
+            logger.error("Error fetching price details: {}", e.getMessage());
+            return new DiamondPriceServiceDB2.PriceDetails(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, LocalDate.now());
+        }
     }
 }

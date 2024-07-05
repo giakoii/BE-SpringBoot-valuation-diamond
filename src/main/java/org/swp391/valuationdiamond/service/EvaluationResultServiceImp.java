@@ -15,23 +15,34 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class EvaluationResultServiceImp {
+public class EvaluationResultServiceImp implements IEvaluationResultService{
+
+    private final EvaluationResultRepository evaluationResultRepository;
+    private final UserRepository userRepository;
+    private final OrderDetailRepository orderDetailRepository;
     @Autowired
-    private EvaluationResultRepository evaluationResultRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    public EvaluationResultServiceImp(EvaluationResultRepository evaluationResultRepository,
+                                      UserRepository userRepository, OrderDetailRepository orderDetailRepository) {
+        this.evaluationResultRepository = evaluationResultRepository;
+        this.userRepository = userRepository;
+        this.orderDetailRepository = orderDetailRepository;
+    }
 
     //thêm try catch vào hàm create
     //============================================ CREATE =====================================
+    @Override
     public EvaluationResult createEvaluationResult(EvaluationResultDTO EvaluationResultDTO){
+
         long count = evaluationResultRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         String ResultId = "ERS"+ date + formattedCount ;
 
+        User userId = userRepository.findById(EvaluationResultDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
+        OrderDetail orderDetail = orderDetailRepository.findById(EvaluationResultDTO.getOrderDetailId()).orElseThrow(() -> new RuntimeException("Order detail not found"));
+
+        try {
         EvaluationResult evaluationResult = EvaluationResult.builder()
                 .evaluationResultId(ResultId)
                 .diamondOrigin(EvaluationResultDTO.getDiamondOrigin())
@@ -50,44 +61,42 @@ public class EvaluationResultServiceImp {
                 .img(EvaluationResultDTO.getImg())
                 .createDate(EvaluationResultDTO.getCreateDate())
                 .build();
-
-        User userId = userRepository.findById(EvaluationResultDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        evaluationResult.setUserId(userId);
-
-        OrderDetail orderDetail = orderDetailRepository.findById(EvaluationResultDTO.getOrderDetailId()).orElseThrow(() -> new RuntimeException("Order detail not found"));
-        evaluationResult.setOrderDetailId(orderDetail);
-
-
-
+            evaluationResult.setUserId(userId);
+            evaluationResult.setOrderDetailId(orderDetail);
         return evaluationResultRepository.save(evaluationResult);
-
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while creating the evaluation result", e);
+       }
     }
 
     //============================================ GET =====================================
+    @Override
     public EvaluationResult getEvaluationResult(String id){
         return evaluationResultRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
-
+    @Override
     public EvaluationResult getResultByOrderDetailId(String orderDetailId) {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order Detail not found"));
         return evaluationResultRepository.findFirstByOrderDetailId(orderDetail);
     }
-
+    @Override
     public List<EvaluationResult> getResultByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         return evaluationResultRepository.findByUserId(user);
     }
-
+    @Override
     public List<EvaluationResult> getAllEvaluationResult() {
         return evaluationResultRepository.findAll();
     }
 
     //============================================ UPDATE =====================================
+    @Override
     public EvaluationResult updateResult(String resultId, EvaluationResultDTO evaluationResultDTO){
-        EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
 
+        EvaluationResult result= evaluationResultRepository.findById(resultId).orElseThrow(() -> new RuntimeException("Evaluation Result not found"));
+        try {
         if (evaluationResultDTO.getDiamondOrigin() != null) {
             result.setDiamondOrigin(evaluationResultDTO.getDiamondOrigin());
         }
@@ -135,6 +144,9 @@ public class EvaluationResultServiceImp {
         }
 
         return evaluationResultRepository.save(result);
+       } catch (Exception e) {
+           throw new RuntimeException("An error occurred while updating the evaluation result", e);
+       }
     }
 }
 

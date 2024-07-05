@@ -7,12 +7,8 @@ import java.util.List;
 
 public interface IEvaluationServiceService {
     EvaluationService createService(EvaluationServiceDTO evaluationServiceDTO);
-
     EvaluationService updateService(String serviceId,EvaluationServiceDTO evaluationServiceDTO);
-
     List<EvaluationService> getServices();
-
     EvaluationService getServiceById(String serviceId);
-
     boolean deleteServiceById(String serviceId);
 }
