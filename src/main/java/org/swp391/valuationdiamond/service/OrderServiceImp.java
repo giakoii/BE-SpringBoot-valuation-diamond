@@ -47,13 +47,14 @@ public class OrderServiceImp {
 
     //user --> request --> order --> orderDetail
     public Order saveOrder(OrderDTO orderDTO) {
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+     try {
+         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 
-        User user = userRepository.findById(orderDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+         User user = userRepository.findById(orderDTO.getUserId())
+                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId())
-                .orElseThrow(() -> new RuntimeException("Request not found"));
+         EvaluationRequest request = evaluationRequestRepository.findById(orderDTO.getRequestId())
+                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
 //        EvaluationRequest requestByUser = evaluationRequestRepository.findByUserId(user)
 //                .stream()
@@ -61,53 +62,61 @@ public class OrderServiceImp {
 //                .findFirst()
 //                .orElseThrow(() -> new RuntimeException("Request by " + orderDTO.getUserId() + " not found"));
 
-        long count = orderRepository.count();
-        String formattedCount = String.valueOf(count + 1);
-        String orderId = "Or" + date + formattedCount;
+         long count = orderRepository.count();
+         String formattedCount = String.valueOf(count + 1);
+         String orderId = "Or" + date + formattedCount;
 
-        Order order = Order.builder()
-                .orderId(orderId)
-                .customerName(orderDTO.getCustomerName())
-                .phone(orderDTO.getPhone())
-                .diamondQuantity(orderDTO.getDiamondQuantity())
-                .orderDate(orderDTO.getOrderDate())
-                .status("In-Progress")
-                .totalPrice(orderDTO.getTotalPrice())
-                .userId(user)
-                .requestId(request)
-                .build();
+         Order order = Order.builder()
+                 .orderId(orderId)
+                 .customerName(orderDTO.getCustomerName())
+                 .phone(orderDTO.getPhone())
+                 .diamondQuantity(orderDTO.getDiamondQuantity())
+                 .orderDate(orderDTO.getOrderDate())
+                 .status("In-Progress")
+                 .totalPrice(orderDTO.getTotalPrice())
+                 .userId(user)
+                 .requestId(request)
+                 .build();
 
-        Order savedOrder = orderRepository.save(order);
+         Order savedOrder = orderRepository.save(order);
 
-        List<OrderDetail> orderDetails = orderDTO.getOrderDetails().stream()
-                .map(od -> {
-                    EvaluationService service = evaluationServiceRepository.findById(od.getServiceId())
-                            .orElseThrow(() -> new RuntimeException("Service not found"));
+         List<OrderDetail> orderDetails = orderDTO.getOrderDetails().stream()
+                 .map(od -> {
+                     EvaluationService service = evaluationServiceRepository.findById(od.getServiceId())
+                             .orElseThrow(() -> new RuntimeException("Service not found"));
 
-                    long countDetail = orderDetailRepository.count();
-                    String formattedCountDetail = String.valueOf(countDetail + 1);
-                    String orderDetailId = "OD" + date + formattedCountDetail;
+                     long countDetail = orderDetailRepository.count();
+                     String formattedCountDetail = String.valueOf(countDetail + 1);
+                     String orderDetailId = "OD" + date + formattedCountDetail;
 
-                    OrderDetail orderDetail = OrderDetail.builder()
-                            .orderDetailId(orderDetailId)
-                            .receivedDate(od.getReceivedDate())
-                            .expiredReceivedDate(od.getExpiredReceivedDate())
-                            .unitPrice(od.getUnitPrice())
-                            .size(od.getSize())
-                            .isDiamond(od.getIsDiamond())
-                            .img(od.getImg())
-                            .status("In-Progress")
-                            .serviceId(service)
-                            .evaluationStaffId(od.getEvaluationStaffId())
-                            .orderId(savedOrder)
-                            .build();
+                     OrderDetail orderDetail = OrderDetail.builder()
+                             .orderDetailId(orderDetailId)
+                             .receivedDate(od.getReceivedDate())
+                             .expiredReceivedDate(od.getExpiredReceivedDate())
+                             .unitPrice(od.getUnitPrice())
+                             .size(od.getSize())
+                             .isDiamond(od.getIsDiamond())
+                             .img(od.getImg())
+                             .status("In-Progress")
+                             .serviceId(service)
+                             .evaluationStaffId(od.getEvaluationStaffId())
+                             .orderId(savedOrder)
+                             .build();
 
-                    return orderDetailRepository.save(orderDetail);
-                })
-                .collect(Collectors.toList());
+                     return orderDetailRepository.save(orderDetail);
+                 })
+                 .collect(Collectors.toList());
 
-        savedOrder.setOrderDetailId(orderDetails);
-        return savedOrder;
+         savedOrder.setOrderDetailId(orderDetails);
+         return savedOrder;
+     } catch(RuntimeException e) {
+
+         System.err.println("Error creating order: " + e.getMessage());
+         throw e;
+     } catch (Exception e) {
+         System.err.println("Unexpected error: " + e.getMessage());
+         throw new RuntimeException("Unexpected error occurred while creating order", e);
+     }
     }
 
     //===============================================Methods Get Order ===============================================
@@ -151,12 +160,21 @@ public class OrderServiceImp {
     //===============================================Methods Update Order ===============================================
 
     public Order updateOrderStatus(String orderId, OrderDTO orderDTO) {
+       try {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (orderDTO.getStatus() != null) {
             order.setStatus(orderDTO.getStatus());
         }
         return orderRepository.save(order);
+       } catch(RuntimeException e) {
+
+           System.err.println("Error updating order: " + e.getMessage());
+           throw e;
+       } catch (Exception e) {
+           System.err.println("Unexpected error: " + e.getMessage());
+           throw new RuntimeException("Unexpected error occurred while updating order", e);
+       }
     }
 
     //===============================================Methods Delete Order ===============================================
