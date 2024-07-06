@@ -54,9 +54,6 @@ public class User {
   @Column(name = "otp_creation_time", nullable = true)
   LocalDateTime otpCreationTime;
 
-  @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
-  List<Rating> ratings;
-
   @JsonBackReference
   @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
   List<EvaluationRequest> evaluationRequests;
