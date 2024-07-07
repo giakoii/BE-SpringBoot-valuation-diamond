@@ -14,7 +14,7 @@ import java.util.TimeZone;
 public class ValuationdiamondApplication {
 
     public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
+//        TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
         SpringApplication.run(ValuationdiamondApplication.class, args);
         for (int i = 0; i <= 5; i++) {
             System.out.println("Success!");
