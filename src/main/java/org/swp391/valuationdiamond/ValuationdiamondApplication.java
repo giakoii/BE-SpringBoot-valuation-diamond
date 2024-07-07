@@ -17,7 +17,7 @@ public class ValuationdiamondApplication {
 //        TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
         SpringApplication.run(ValuationdiamondApplication.class, args);
         for (int i = 0; i <= 5; i++) {
-            System.out.println("Success!");
+            System.out.println("Success!");  
         }
     }
 
