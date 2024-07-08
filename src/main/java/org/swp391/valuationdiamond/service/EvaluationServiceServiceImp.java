@@ -39,6 +39,7 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
                     .serviceId(serviceId)
                     .serviceType(evaluationServiceDTO.getServiceType())
                     .serviceDescription(evaluationServiceDTO.getServiceDescription())
+                    .status(evaluationServiceDTO.getStatus())
                     .build();
             return evaluationServiceRepository.save(evaluationService);
         } catch (Exception e) {
@@ -58,6 +59,9 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
             }
             if (evaluationServiceDTO.getServiceDescription() != null) {
                 evaluationService.setServiceDescription(evaluationServiceDTO.getServiceDescription());
+            }
+            if(evaluationServiceDTO.getStatus() != null){
+                evaluationService.setStatus(evaluationServiceDTO.getStatus());
             }
             return evaluationServiceRepository.save(evaluationService);
         } catch (Exception e) {

@@ -27,6 +27,9 @@ public class EvaluationService {
   @Column(name = "service_description", nullable = true, columnDefinition = "NVARCHAR(MAX)")
   String serviceDescription;
 
+  @Column(name = "status", nullable = true, length = 50)
+  String status;
+
   @JsonIgnore
   @OneToMany(mappedBy = "serviceId")
   List<EvaluationServicePriceList> servicePriceList;

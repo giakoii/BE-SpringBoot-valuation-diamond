@@ -14,4 +14,5 @@ public class EvaluationServiceDTO {
     String serviceId;
     String serviceType;
     String serviceDescription;
+    String status;
 }
