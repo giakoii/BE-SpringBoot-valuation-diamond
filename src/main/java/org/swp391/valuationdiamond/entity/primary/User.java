@@ -54,6 +54,10 @@ public class User {
   @Column(name = "otp_creation_time", nullable = true)
   LocalDateTime otpCreationTime;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
+  Status status;
+
   @JsonBackReference
   @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
   List<EvaluationRequest> evaluationRequests;

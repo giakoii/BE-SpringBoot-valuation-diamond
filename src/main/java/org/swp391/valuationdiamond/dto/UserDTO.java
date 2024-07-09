@@ -26,4 +26,5 @@ public class UserDTO {
     String email;
     String address;
     String role;
+    String status;
 }

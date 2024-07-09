@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.dto.UserDTO;
 import org.swp391.valuationdiamond.entity.primary.PendingUser;
 import org.swp391.valuationdiamond.entity.primary.Role;
+import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.entity.primary.User;
 import org.swp391.valuationdiamond.repository.primary.PendingUserRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
@@ -231,34 +232,42 @@ public class UserServiceImp implements IUserService {
     }
 
     //=============================== Các hàm GET ==========================================
-    @Override
-    public List<User> getStaffByRoleEvaluationStaff(){
 
-        return userRepository.getUsersByRole(Role.valuation_staff);
+    @Override
+    public List<User> getStaffByRoleEvaluationStaff() {
+        return userRepository.findByStatusAndRole(Status.ENABLE, Role.valuation_staff);
     }
     @Override
     public List<User> getStaff() {
         List<User> staff = new ArrayList<>();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        staff.addAll(userRepository.getUsersByRole(Role.valuation_staff));
-        staff.addAll(userRepository.getUsersByRole(Role.consultant_staff));
+        staff.addAll(userRepository.findByStatusAndRole(Status.ENABLE, Role.valuation_staff));
+        staff.addAll(userRepository.findByStatusAndRole(Status.ENABLE, Role.consultant_staff));
 
         return staff;
     }
     @Override
-    public User getStaffById(String id){
-        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("Staff not found"));
+    public User getStaffById(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
+        if (user.getStatus() == Status.ENABLE) {
+            return user;
+        }
+        throw new RuntimeException("Staff is disabled");
     }
     @Override
-    public User getAUser(String id){
-        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("UserId Not Found"));
+    public User getAUser(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("UserId Not Found"));
+        if (user.getStatus() == Status.ENABLE) {
+            return user;
+        }
+        throw new RuntimeException("User is disabled");
     }
     @Override
-    public List<User> getCustomers(){
-        return userRepository.getUsersByRole(Role.customer);
+    public List<User> getCustomers() {
+        return userRepository.findByStatusAndRole(Status.ENABLE, Role.customer);
     }
-
-
     //=============================== Các hàm UPDATE và DELETE ==========================================
     @Override
     public User updateUser(String userId, UserDTO userDTO){
@@ -288,6 +297,9 @@ public class UserServiceImp implements IUserService {
            }
            if (userDTO.getRole() != null) {
                user.setRole(Role.valueOf(userDTO.getRole()));
+           }
+           if(userDTO.getStatus() != null){
+               user.setStatus(Status.valueOf(userDTO.getStatus()));
            }
            return userRepository.save(user);
        } catch (Exception e) {
