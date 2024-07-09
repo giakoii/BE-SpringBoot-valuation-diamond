@@ -1,5 +1,6 @@
 package org.swp391.valuationdiamond.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,6 +20,7 @@ public class UserDTO {
     String firstName;
     @Pattern(regexp = "^[a-zA-Z\\s]{1,255}$", message = "Last name must contain only letters and spaces")
     String lastName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     Date birthday;
     @Pattern(regexp = "^(0)\\d{9,10}$", message = "Phone number must be in the format +84xxxxxxxxx or 0xxxxxxxxx")
     String phoneNumber;

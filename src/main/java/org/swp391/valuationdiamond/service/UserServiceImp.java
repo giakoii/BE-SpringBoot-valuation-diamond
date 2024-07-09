@@ -272,7 +272,7 @@ public class UserServiceImp implements IUserService {
     @Override
     public User updateUser(String userId, UserDTO userDTO){
            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        if (user.getStatus() != Status.ENABLE) {
+           if (user.getStatus() != Status.ENABLE) {
             throw new RuntimeException("User is DISABLE");
         }
         try {
