@@ -27,8 +27,9 @@ public class EvaluationService {
   @Column(name = "service_description", nullable = true, columnDefinition = "NVARCHAR(MAX)")
   String serviceDescription;
 
-  @Column(name = "status", nullable = true, length = 50)
-  String status;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
+  Status status;
 
   @JsonIgnore
   @OneToMany(mappedBy = "serviceId")
