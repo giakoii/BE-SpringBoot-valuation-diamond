@@ -6,12 +6,14 @@ import org.swp391.valuationdiamond.dto.EvaluationServiceDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationService;
 import org.swp391.valuationdiamond.entity.primary.EvaluationServicePriceList;
 import org.swp391.valuationdiamond.entity.primary.OrderDetail;
+import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServicePriceListReponsitory;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServiceRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,7 +41,7 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
                     .serviceId(serviceId)
                     .serviceType(evaluationServiceDTO.getServiceType())
                     .serviceDescription(evaluationServiceDTO.getServiceDescription())
-                    .status(evaluationServiceDTO.getStatus())
+                    .status(Status.ENABLE)
                     .build();
             return evaluationServiceRepository.save(evaluationService);
         } catch (Exception e) {
@@ -61,7 +63,7 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
                 evaluationService.setServiceDescription(evaluationServiceDTO.getServiceDescription());
             }
             if(evaluationServiceDTO.getStatus() != null){
-                evaluationService.setStatus(evaluationServiceDTO.getStatus());
+                evaluationService.setStatus(Status.valueOf(evaluationServiceDTO.getStatus()));
             }
             return evaluationServiceRepository.save(evaluationService);
         } catch (Exception e) {
@@ -72,14 +74,17 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
     //=============================================== Các hàm Get ========================================
     @Override
     public List<EvaluationService> getServices() {
-        return evaluationServiceRepository.findAll();
+        return evaluationServiceRepository.findByStatus(Status.ENABLE);
     }
 
     @Override
     public EvaluationService getServiceById(String serviceId) {
         EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
-        return evaluationService;
+        if (evaluationService.getStatus() == Status.ENABLE) {
+            return evaluationService;
+        }
+        throw new RuntimeException("Service is disabled");
     }
 
     //============================================ Hàm delete ========================================
