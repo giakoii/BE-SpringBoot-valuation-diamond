@@ -156,6 +156,7 @@ public class UserServiceImp implements IUserService {
                 .phoneNumber(pendingUser.getPhoneNumber())
                 .address(pendingUser.getAddress())
                 .role(pendingUser.getRole())
+                .status(Status.ENABLE)
                 .build();
         pendingUserRepository.deleteByUserId(userId);
 
@@ -165,7 +166,7 @@ public class UserServiceImp implements IUserService {
     //hàm đăng nhập
     @Override
     public User login(String userId, String password) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findByUserIdAndStatus(userId, Status.ENABLE);
         if (user != null) {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             if (passwordEncoder.matches(password, user.getPassword())) {
@@ -184,7 +185,7 @@ public class UserServiceImp implements IUserService {
     //hàm forgot password --> Gui email chứa OTP
     @Override
     public boolean forgotPassword(String userId) throws MessagingException {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findByUserIdAndStatus(userId, Status.ENABLE);
         if (user == null) {
             throw new RuntimeException("User not found");
         }
@@ -216,7 +217,7 @@ public class UserServiceImp implements IUserService {
     @Override
     @Transactional
     public User resetPassword(String userId, String otp, String newPassword) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findByUserIdAndStatus(userId, Status.ENABLE);
         if (user == null) {
             throw new RuntimeException("User not found");
         }
