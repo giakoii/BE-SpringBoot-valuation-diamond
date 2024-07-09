@@ -273,7 +273,7 @@ public class UserServiceImp implements IUserService {
     public User updateUser(String userId, UserDTO userDTO){
            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getStatus() != Status.ENABLE) {
-            throw new RuntimeException("User is not enabled");
+            throw new RuntimeException("User is DISABLE");
         }
         try {
            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
