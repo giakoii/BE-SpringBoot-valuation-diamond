@@ -104,6 +104,7 @@ public class UserServiceImp implements IUserService {
                     .phoneNumber(userDTO.getPhoneNumber())
                     .address(userDTO.getAddress())
                     .role(Role.valueOf(userDTO.getRole()))
+                    .status(Status.ENABLE)
                     .build();
 
             return userRepository.save(user);
