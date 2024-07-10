@@ -86,6 +86,10 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
         }
         throw new RuntimeException("Service is disabled");
     }
+    @Override
+    public List<EvaluationService> getAllServices() {
+        return evaluationServiceRepository.findAll();
+    }
 
     //============================================ Hàm delete ========================================
     @Override

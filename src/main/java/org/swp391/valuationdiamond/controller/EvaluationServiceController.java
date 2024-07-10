@@ -44,4 +44,8 @@ public class EvaluationServiceController {
     List<EvaluationService> getServices() {
         return evaluationServiceServiceImp.getServices();
     }
+    @GetMapping("/getServiceAdmin")
+    List<EvaluationService> getAllServices(){
+        return evaluationServiceServiceImp.getAllServices();
+    }
 }

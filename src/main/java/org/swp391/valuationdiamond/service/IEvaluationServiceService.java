@@ -11,4 +11,5 @@ public interface IEvaluationServiceService {
     List<EvaluationService> getServices();
     EvaluationService getServiceById(String serviceId);
     boolean deleteServiceById(String serviceId);
+    List<EvaluationService> getAllServices();
 }
