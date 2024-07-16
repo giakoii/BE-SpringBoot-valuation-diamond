@@ -1,6 +1,7 @@
 package org.swp391.valuationdiamond.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,12 +50,11 @@ public class DiamondAssessmentDB2Controller {
         }
     }
     @GetMapping("/DiamondAssessmentByIDDB2/{assessId}")
-    public ResponseEntity<DiamondAssessmentDB2> getDiamondAssessment(@PathVariable ("assessId") String assessId) {
-        try {
-            DiamondAssessmentDB2 assessment = diamondAssessmentServiceDB2.getDiamondAssessmentById(assessId);
-            return ResponseEntity.ok(assessment);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(null);
+    public ResponseEntity<?> getDiamondAssessment(@PathVariable("assessId") String assessId) {
+        DiamondAssessmentDB2 assessment = diamondAssessmentServiceDB2.getDiamondAssessmentById(assessId);
+        if (assessment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Diamond not found");
         }
+        return ResponseEntity.ok(assessment);
     }
 }
