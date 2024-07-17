@@ -116,7 +116,7 @@ public class OrderServiceImp implements IOrderService {
     @Override
     public List<Order> getOrders() {
 
-        return orderRepository.findOrderByStatus("In-Progress");
+        return orderRepository.findOrderByStatus(String.valueOf(Status.In_Progress));
     }
     @Override
     public List<Order> getAllOrders() {
