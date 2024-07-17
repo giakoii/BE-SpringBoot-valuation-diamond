@@ -68,7 +68,7 @@ public class OrderServiceImp implements IOrderService {
                     .phone(orderDTO.getPhone())
                     .diamondQuantity(orderDTO.getDiamondQuantity())
                     .orderDate(orderDTO.getOrderDate())
-                    .status("In-Progress")
+                    .status(Status.In_Progress)
                     .totalPrice(orderDTO.getTotalPrice())
                     .userId(user)
                     .requestId(request)
@@ -96,7 +96,7 @@ public class OrderServiceImp implements IOrderService {
                                 .size(od.getSize())
                                 .isDiamond(od.getIsDiamond())
                                 .img(od.getImg())
-                                .status("In-Progress")
+                                .status(Status.In_Progress)
                                 .serviceId(service)
                                 .evaluationStaffId(od.getEvaluationStaffId())
                                 .orderId(savedOrder)
@@ -159,7 +159,7 @@ public class OrderServiceImp implements IOrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (orderDTO.getStatus() != null) {
-            order.setStatus(orderDTO.getStatus());
+            order.setStatus(Status.valueOf(orderDTO.getStatus()));
         }
         return orderRepository.save(order);
        } catch (Exception e) {

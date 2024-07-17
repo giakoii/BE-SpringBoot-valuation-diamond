@@ -68,7 +68,6 @@ public class EvaluationResult {
   @JoinColumn(name = "user_id", referencedColumnName = "user_id")
   User userId;
 
-
   @ManyToOne
   @JoinColumn(name = "order_de_id", referencedColumnName = "order_de_id")
   OrderDetail orderDetailId;

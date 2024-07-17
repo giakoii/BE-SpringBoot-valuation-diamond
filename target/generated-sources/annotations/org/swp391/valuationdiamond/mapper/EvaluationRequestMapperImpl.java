@@ -7,7 +7,7 @@ import org.swp391.valuationdiamond.entity.primary.User;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-09T20:25:27+0700",
+    date = "2024-07-17T11:05:17+0700",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 public class EvaluationRequestMapperImpl implements EvaluationRequestMapper {
@@ -21,7 +21,6 @@ public class EvaluationRequestMapperImpl implements EvaluationRequestMapper {
         EvaluationRequestDTO.EvaluationRequestDTOBuilder evaluationRequestDTO = EvaluationRequestDTO.builder();
 
         evaluationRequestDTO.userId( evaluationRequestUserIdUserId( evaluationRequest ) );
-        evaluationRequestDTO.requestId( evaluationRequest.getRequestId() );
         evaluationRequestDTO.requestDescription( evaluationRequest.getRequestDescription() );
         evaluationRequestDTO.requestDate( evaluationRequest.getRequestDate() );
         evaluationRequestDTO.requestEmail( evaluationRequest.getRequestEmail() );
@@ -43,7 +42,6 @@ public class EvaluationRequestMapperImpl implements EvaluationRequestMapper {
         EvaluationRequest.EvaluationRequestBuilder evaluationRequest = EvaluationRequest.builder();
 
         evaluationRequest.userId( evaluationRequestDTOToUser( evaluationRequestDTO ) );
-        evaluationRequest.requestId( evaluationRequestDTO.getRequestId() );
         evaluationRequest.requestDescription( evaluationRequestDTO.getRequestDescription() );
         evaluationRequest.requestDate( evaluationRequestDTO.getRequestDate() );
         evaluationRequest.requestEmail( evaluationRequestDTO.getRequestEmail() );

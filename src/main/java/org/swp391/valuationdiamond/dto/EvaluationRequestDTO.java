@@ -6,6 +6,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import java.util.Date;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,15 +23,19 @@ import org.swp391.valuationdiamond.config.CustomDateDeserializer;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EvaluationRequestDTO {
-  String requestId;
   String requestDescription;
   @JsonDeserialize(using = CustomDateDeserializer.class)
   @DateTimeFormat(pattern = "MM/dd/yyyy, HH:mm")
   Date requestDate;
+  @NotBlank
   String requestEmail;
+  @NotBlank
   String guestName;
+
   String status;
+  @NotBlank
   String service;
+  @NotBlank
   String phoneNumber;
   String userId;
   @JsonDeserialize(using = CustomDateDeserializer.class)

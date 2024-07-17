@@ -1,17 +1,18 @@
 package org.swp391.valuationdiamond.service;
 
+import com.nimbusds.jose.jwk.Curve;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.dto.OrderDetailDTO;
-import org.swp391.valuationdiamond.entity.primary.EvaluationService;
-import org.swp391.valuationdiamond.entity.primary.Order;
-import org.swp391.valuationdiamond.entity.primary.OrderDetail;
+import org.swp391.valuationdiamond.entity.primary.*;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServiceRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderDetailServiceImp implements IOrderDetailService {
@@ -22,6 +23,9 @@ public class OrderDetailServiceImp implements IOrderDetailService {
 
     @Autowired
     private EvaluationServiceRepository evaluationServiceRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public OrderDetail getOrderDetailId(String id) {
@@ -34,7 +38,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
         try {
             OrderDetail orderDetail = getOrderDetailId(orderDetailId);
 
-            orderDetail.setStatus(orderDetailDTO.getStatus());
+            orderDetail.setStatus(Status.valueOf(orderDetailDTO.getStatus()));
 
             // Set Order
             if (orderDetailDTO.getOrderId() != null) {
@@ -87,7 +91,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
 
     @Override
     public List<OrderDetail> getOrderDetailsByOrderStatusInProgress() {
-        return orderDetailRepository.findByStatus("In-Progress");
+        return orderDetailRepository.findByStatus(String.valueOf(Status.In_Progress));
     }
 
     //ham getall
@@ -138,7 +142,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
                 orderDetail.setEvaluationStaffId(orderDetailDTO.getEvaluationStaffId());
             }
             if (orderDetailDTO.getStatus() != null) {
-                orderDetail.setStatus(orderDetailDTO.getStatus());
+                orderDetail.setStatus(Status.valueOf(orderDetailDTO.getStatus()));
             }
             if (orderDetailDTO.getUnitPrice() != null) {
                 orderDetail.setUnitPrice(orderDetailDTO.getUnitPrice());
@@ -198,6 +202,20 @@ public class OrderDetailServiceImp implements IOrderDetailService {
     @Override
     public long countByEvaluationStaffIdIsNull() {
         return orderDetailRepository.countByEvaluationStaffIdIsNull();
+    }
+
+    //=============================== Hàm để count các valuation staff đang làm order ==========================================
+    //để admin chia việc
+    public Map<String, Long> countOrderDetailByEvaluationStaffId() {
+        List<User> valuationStaffs = userRepository.findByRole(Role.valuation_staff);
+        Map<String, Long> staffOrderDetailCount = new HashMap<>();
+
+        for (User valuationStaff : valuationStaffs) {
+            long count = orderDetailRepository.countByEvaluationStaffIdAndStatus(valuationStaff.getUserId(), Status.Assigned);
+            staffOrderDetailCount.put(valuationStaff.getUserId(), count);
+        }
+
+        return staffOrderDetailCount;
     }
 }
 
