@@ -91,7 +91,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
 
     @Override
     public List<OrderDetail> getOrderDetailsByOrderStatusInProgress() {
-        return orderDetailRepository.findByStatus(String.valueOf(Status.In_Progress));
+        return orderDetailRepository.findByStatus(Status.In_Progress);
     }
 
     //ham getall

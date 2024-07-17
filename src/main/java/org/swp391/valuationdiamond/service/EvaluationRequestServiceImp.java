@@ -11,6 +11,7 @@ import org.swp391.valuationdiamond.dto.EvaluationRequestDTO;
 
 import jakarta.transaction.Transactional;
 import org.swp391.valuationdiamond.entity.primary.EvaluationRequest;
+import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.entity.primary.User;
 import org.swp391.valuationdiamond.repository.primary.EvaluationRequestRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
@@ -77,7 +78,7 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
 
     //show by status 'R'
     @Override
-    public List<EvaluationRequest> getEvaluationRequestByStatus(String status) {
+    public List<EvaluationRequest> getEvaluationRequestByStatus(Status status) {
         return evaluationRequestRepository.findByStatus(status);
     }
 
