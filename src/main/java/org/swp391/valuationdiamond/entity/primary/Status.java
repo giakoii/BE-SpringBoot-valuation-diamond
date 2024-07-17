@@ -8,7 +8,7 @@ public enum Status {
     Finished,
     Sealed,
     Requesting,
-    Cancelled,
+    Canceled,
     Accepted,
     Assigned,
 }
