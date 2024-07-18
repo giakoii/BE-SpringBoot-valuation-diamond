@@ -42,7 +42,8 @@ public class OrderDetail {
   @Column(name = "is_diamond", nullable = true)
   Boolean isDiamond;
   @Column(name = "status", nullable = true, length = 255)
-  String status;
+  @Enumerated(EnumType.STRING)
+  Status status;
 
 
   @JsonManagedReference

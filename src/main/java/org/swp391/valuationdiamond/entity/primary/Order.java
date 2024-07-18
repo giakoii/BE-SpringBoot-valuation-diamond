@@ -37,7 +37,8 @@ public class Order {
   Date orderDate;
 
   @Column(name = "status", nullable = true, length = 10)
-  String status;
+  @Enumerated(EnumType.STRING)
+  Status status;
 
   @Column(name = "total_price", nullable = true, precision = 18, scale = 2)
   BigDecimal totalPrice;

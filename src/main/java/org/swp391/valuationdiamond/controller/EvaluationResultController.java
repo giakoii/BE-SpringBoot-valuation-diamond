@@ -1,5 +1,6 @@
 package org.swp391.valuationdiamond.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class EvaluationResultController {
     @Autowired
     private EvaluationResultServiceImp evaluationResultServiceImp;
     @PostMapping ("/create")
-    EvaluationResult createEvaluationResult(@RequestBody EvaluationResultDTO evaluationResultDTO) {
+    EvaluationResult createEvaluationResult(@Valid @RequestBody EvaluationResultDTO evaluationResultDTO) {
         return evaluationResultServiceImp.createEvaluationResult(evaluationResultDTO);
 
     }

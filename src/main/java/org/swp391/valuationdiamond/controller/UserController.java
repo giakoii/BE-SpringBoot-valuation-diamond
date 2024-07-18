@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.UserDTO;
 import org.swp391.valuationdiamond.entity.primary.User;
+import org.swp391.valuationdiamond.service.OrderDetailServiceImp;
 import org.swp391.valuationdiamond.service.UserServiceImp;
 
 
@@ -24,6 +25,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserServiceImp userServiceImp;
+
+    @Autowired
+    private OrderDetailServiceImp orderDetailServiceImp;
 
     // =================================== API CREATE ======================================
 
@@ -110,10 +114,17 @@ public class UserController {
 
     // API get a user by userId
     @GetMapping("/getAUser/{userId}")
-        User getAUser(@PathVariable("userId") String userId ){
+        User getAUser(@PathVariable("userId") String userId ) {
 
         return userServiceImp.getAUser(userId);
-        }
+    }
+
+    //Count valuation staff by order detail with status "Assigned"
+    @GetMapping("/countOrderDetailByEvaluationStaffId")
+    public ResponseEntity<Map<String, Long>> getAssignedOrderDetailsCountForAllStaff() {
+        Map<String, Long> staffOrderDetailCount = orderDetailServiceImp.countOrderDetailByEvaluationStaffId();
+        return ResponseEntity.ok(staffOrderDetailCount);
+    }
 
     // =================================== API UPDATE ======================================
 
@@ -145,5 +156,7 @@ public class UserController {
         long totalUserCount = userServiceImp.countUsers();
         return new UserServiceImp.UserCountResponse(totalUserCount);
     }
+
+
 }
 

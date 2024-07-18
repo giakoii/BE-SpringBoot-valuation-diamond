@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.EvaluationRequestDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationRequest;
+import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.service.EvaluationRequestServiceImp;
 import org.swp391.valuationdiamond.service.IEvaluationRequestService;
 
@@ -36,7 +37,7 @@ public class EvaluationRequestController {
     }
 
     @GetMapping("/list/{status}")
-    public List<EvaluationRequest> getEvaluationRequestByStatus(@PathVariable("status") String status) {
+    public List<EvaluationRequest> getEvaluationRequestByStatus(@PathVariable("status") Status status) {
         return evaluationRequestService.getEvaluationRequestByStatus(status);
     }
 
