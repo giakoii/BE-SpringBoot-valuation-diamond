@@ -27,38 +27,48 @@ public class DiamondAssessmentServiceDB2 implements IDiamondAssessmentDB2{
                                                           String assessClarity, String assessOrigin, String proportions,
                                                           BigDecimal priceMin, BigDecimal priceMax) {
         try {
+            BigDecimal caratRange = BigDecimal.valueOf(0.5); // Điều chỉnh phạm vi carat ở đây
+            BigDecimal caratMin = (assessCarat != null) ? assessCarat.subtract(caratRange) : null;
+            BigDecimal caratMax = (assessCarat != null) ? assessCarat.add(caratRange) : null;
 
-            BigDecimal caratMin = (assessCarat != null) ? assessCarat.subtract(BigDecimal.valueOf(0.5)) : null;
-            BigDecimal caratMax = (assessCarat != null) ? assessCarat.add(BigDecimal.valueOf(0.5)) : null;
             Specification<DiamondAssessmentDB2> spec = Specification.where(
                     (assessCarat != null) ? DiamondAssessmentSpecification.hasCaratBetween(caratMin, caratMax) : null
             );
 
+            if (assessShapeCut != null && !assessShapeCut.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasAssessShapeCut(assessShapeCut));
+            }
+
+            if (assessCut != null && !assessCut.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasAssessCut(assessCut));
+            }
+
+            if (fluorescence != null && !fluorescence.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasFluorescence(fluorescence));
+            }
+
+            if (symmetry != null && !symmetry.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasSymmetry(symmetry));
+            }
+
+            if (assessColor != null && !assessColor.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasAssessColor(assessColor));
+            }
+
+            if (assessClarity != null && !assessClarity.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasAssessClarity(assessClarity));
+            }
 
             if (assessOrigin != null && !assessOrigin.isEmpty()) {
                 spec = spec.and(DiamondAssessmentSpecification.hasAssessOrigin(assessOrigin));
             }
 
-            // Add other criteria only if carat and origin are specified
-            if (assessCarat != null || (assessOrigin != null && !assessOrigin.isEmpty())) {
-                spec = spec.and(DiamondAssessmentSpecification.hasAssessShapeCut(assessShapeCut))
-                        .and(DiamondAssessmentSpecification.hasAssessCut(assessCut))
-                        .and(DiamondAssessmentSpecification.hasFluorescence(fluorescence))
-                        .and(DiamondAssessmentSpecification.hasSymmetry(symmetry))
-                        .and(DiamondAssessmentSpecification.hasAssessColor(assessColor))
-                        .and(DiamondAssessmentSpecification.hasAssessClarity(assessClarity))
-                        .and(DiamondAssessmentSpecification.hasProportions(proportions))
-                        .and(DiamondAssessmentSpecification.hasPriceBetween(priceMin, priceMax));
-            } else {
-                // If neither carat nor origin is specified, add other criteria directly
-                spec = DiamondAssessmentSpecification.hasAssessShapeCut(assessShapeCut)
-                        .and(DiamondAssessmentSpecification.hasAssessCut(assessCut))
-                        .and(DiamondAssessmentSpecification.hasFluorescence(fluorescence))
-                        .and(DiamondAssessmentSpecification.hasSymmetry(symmetry))
-                        .and(DiamondAssessmentSpecification.hasAssessColor(assessColor))
-                        .and(DiamondAssessmentSpecification.hasAssessClarity(assessClarity))
-                        .and(DiamondAssessmentSpecification.hasProportions(proportions))
-                        .and(DiamondAssessmentSpecification.hasPriceBetween(priceMin, priceMax));
+            if (proportions != null && !proportions.isEmpty()) {
+                spec = spec.and(DiamondAssessmentSpecification.hasProportions(proportions));
+            }
+
+            if (priceMin != null && priceMax != null) {
+                spec = spec.and(DiamondAssessmentSpecification.hasPriceBetween(priceMin, priceMax));
             }
 
             return diamondAssessmentDB2Repository.findAll(spec);
@@ -67,7 +77,6 @@ public class DiamondAssessmentServiceDB2 implements IDiamondAssessmentDB2{
             return Collections.emptyList();
         }
     }
-
     public DiamondAssessmentDB2 getDiamondAssessmentById(String assessId) {
         logger.info("Fetching diamond assessment with ID {}", assessId);
         DiamondAssessmentDB2 assessment = diamondAssessmentDB2Repository.findByAssessId(assessId);
