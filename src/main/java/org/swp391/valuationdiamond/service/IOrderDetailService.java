@@ -17,5 +17,6 @@ public interface IOrderDetailService {
     OrderDetail updateOrderDetail(String orderDetailId, OrderDetailDTO orderDetailDTO);
     List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId);
     long countByEvaluationStaffIdIsNull();
+    List<OrderDetail> getOrderDetailsByEvaluationStaffIsNullAndStatusInProgress();
 
 }

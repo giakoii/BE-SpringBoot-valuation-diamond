@@ -85,6 +85,11 @@ public class OrderDetailController {
         long OrderDetailWithEvaluationStaffIdIsNull = orderDetailServiceImp.countByEvaluationStaffIdIsNull();
         return new OrderDetailServiceImp.OrderDetailCountResponse(OrderDetailWithEvaluationStaffIdIsNull);
     }
+    // New endpoint to get order details with evaluation staff null and status In_Progress
+    @GetMapping("/getOrderDetailsByEvalStaffNullAndStatusInProgress")
+    public List<OrderDetail> getOrderDetailsByEvaluationStaffIsNullAndStatusInProgress() {
+        return orderDetailServiceImp.getOrderDetailsByEvaluationStaffIsNullAndStatusInProgress();
+    }
 
 }
 

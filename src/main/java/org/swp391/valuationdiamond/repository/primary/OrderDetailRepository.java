@@ -25,6 +25,8 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, String
     Long countByEvaluationStaffIdIsNull();
 
     Long findByEvaluationStaffIdAndStatus(String evaluationStaffId, Status status);
+    List<OrderDetail> findByEvaluationStaffIdIsNullAndStatus(Status status);
+
 
     Long countByEvaluationStaffIdAndStatus(String evaluationStaffId, Status status);
 }

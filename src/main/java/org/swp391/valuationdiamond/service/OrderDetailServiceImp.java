@@ -105,6 +105,11 @@ public class OrderDetailServiceImp implements IOrderDetailService {
     public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull() {
         return orderDetailRepository.findByEvaluationStaffIdIsNull();
     }
+    // get function
+    @Override
+    public List<OrderDetail> getOrderDetailsByEvaluationStaffIsNullAndStatusInProgress() {
+        return orderDetailRepository.findByEvaluationStaffIdIsNullAndStatus(Status.In_Progress);
+    }
 
     @Override
     public OrderDetail updateOrderDeIsDiamond(String orderDetailId, OrderDetailDTO orderDetailDTO) {
@@ -175,6 +180,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
     public List<OrderDetail> getOrderDetailByEvaluationStaffId(String evaluationStaffId) {
         return orderDetailRepository.findByEvaluationStaffId(evaluationStaffId);
     }
+
 
     public static class OrderDetailCountResponse {
         private long Count;
