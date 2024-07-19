@@ -121,8 +121,8 @@ public class UserController {
 
     //Count valuation staff by order detail with status "Assigned"
     @GetMapping("/countOrderDetailByEvaluationStaffId")
-    public ResponseEntity<Map<String, Long>> getAssignedOrderDetailsCountForAllStaff() {
-        Map<String, Long> staffOrderDetailCount = orderDetailServiceImp.countOrderDetailByEvaluationStaffId();
+    public ResponseEntity<List<Map<String, Object>>> getAssignedOrderDetailsCountForAllStaff() {
+        List<Map<String, Object>> staffOrderDetailCount = orderDetailServiceImp.countOrderDetailByEvaluationStaffId();
         return ResponseEntity.ok(staffOrderDetailCount);
     }
 

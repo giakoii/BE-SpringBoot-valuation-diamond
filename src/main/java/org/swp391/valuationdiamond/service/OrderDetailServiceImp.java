@@ -10,6 +10,7 @@ import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,16 +213,19 @@ public class OrderDetailServiceImp implements IOrderDetailService {
 
     //=============================== Hàm để count các valuation staff đang làm order ==========================================
     //để admin chia việc
-    public Map<String, Long> countOrderDetailByEvaluationStaffId() {
+    public List<Map<String, Object>> countOrderDetailByEvaluationStaffId() {
         List<User> valuationStaffs = userRepository.findByRole(Role.valuation_staff);
-        Map<String, Long> staffOrderDetailCount = new HashMap<>();
+        List<Map<String, Object>> result = new ArrayList<>();
 
         for (User valuationStaff : valuationStaffs) {
             long count = orderDetailRepository.countByEvaluationStaffIdAndStatus(valuationStaff.getUserId(), Status.Assigned);
-            staffOrderDetailCount.put(valuationStaff.getUserId(), count);
+            Map<String, Object> staffCount = new HashMap<>();
+            staffCount.put("userId", valuationStaff.getUserId());
+            staffCount.put("count", count);
+            result.add(staffCount);
         }
 
-        return staffOrderDetailCount;
+        return result;
     }
 }
 
