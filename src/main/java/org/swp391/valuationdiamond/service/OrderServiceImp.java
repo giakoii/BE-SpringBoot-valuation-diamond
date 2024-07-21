@@ -1,8 +1,12 @@
 package org.swp391.valuationdiamond.service;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.apache.coyote.Request;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.controller.OrderDetailController;
 import org.swp391.valuationdiamond.dto.OrderDTO;
@@ -43,6 +47,9 @@ public class OrderServiceImp implements IOrderService {
 
     @Autowired
     private OrderDetailController orderDetailController;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
     //=============================================== Create Order ===============================================
 
     //user --> request --> order --> orderDetail
@@ -154,17 +161,21 @@ public class OrderServiceImp implements IOrderService {
     }
     //===============================================Methods Update Order ===============================================
     @Override
-    public Order updateOrderStatus(String orderId, OrderDTO orderDTO) {
-       try {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    public Order updateOrderStatus(String orderId, OrderDTO orderDTO) throws MessagingException {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        EvaluationRequest request = order.getRequestId();
 
         if (orderDTO.getStatus() != null) {
             order.setStatus(Status.valueOf(orderDTO.getStatus()));
+            orderRepository.save(order);
+            if (order.getStatus().equals(Status.Completed)) {
+                sendMessageToEmail(request.getRequestEmail(), request.getGuestName(), orderId);
+            }
         }
-        return orderRepository.save(order);
-       } catch (Exception e) {
-           throw new RuntimeException("An error occurred while updating the order", e);
-       }
+
+        return order;
     }
 
 
@@ -275,6 +286,24 @@ public class MonthlyOrderCount {
 
         return totalPriceSum;
     }
+
+    //Hàm này gửi tin nhắn đã định giá xong tới email của khách hàng
+    private void sendMessageToEmail(String email,String name, String orderId) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setTo(email);
+        helper.setSubject("Message");
+
+        String text = "Dear User" + name + ",\n\n"
+                + "Your order of you is "+ orderId + " is Completed,\n"
+                + "Please come pick it up within 30 days.\n\n"
+                + "Best regards,\n\n"
+                + "Valuation Diamond";
+        helper.setText(text);
+
+        javaMailSender.send(message);
+    }
+
 
     public class PercentageChangeResult {
         private BigDecimal PrevMonth;

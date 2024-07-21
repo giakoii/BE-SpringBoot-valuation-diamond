@@ -1,5 +1,6 @@
 package org.swp391.valuationdiamond.controller;
 
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.OrderDTO;
@@ -58,7 +59,7 @@ public class OrderController {
     // =================================== API UPDATE ======================================
 
     @PutMapping("/updateStatus/{orderId}")
-    public Order updateOrderStatus(@PathVariable("orderId") String orderId, @RequestBody OrderDTO orderDTO) {
+    public Order updateOrderStatus(@PathVariable("orderId") String orderId, @RequestBody OrderDTO orderDTO) throws MessagingException {
         return orderServiceImp.updateOrderStatus(orderId, orderDTO);
     }
 

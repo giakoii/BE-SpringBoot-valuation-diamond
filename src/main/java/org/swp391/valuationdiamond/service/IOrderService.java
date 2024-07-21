@@ -1,5 +1,6 @@
 package org.swp391.valuationdiamond.service;
 
+import jakarta.mail.MessagingException;
 import org.swp391.valuationdiamond.dto.OrderDTO;
 import org.swp391.valuationdiamond.entity.primary.Order;
 
@@ -12,7 +13,7 @@ public interface IOrderService {
     List<Order> getAllOrders();
     List<Order> getOrderByRequest(String requestId);
     List<Order> getOrderByUser(String userId);
-    Order updateOrderStatus(String orderId, OrderDTO orderDTO);
+    Order updateOrderStatus(String orderId, OrderDTO orderDTO) throws MessagingException;
     boolean deleteOrder(String orderId);
     List<OrderServiceImp.MonthlyOrderCount> countOrdersRegisteredPerMonth(int numberOfMonths);
     List<OrderServiceImp.MonthlyTotalPrice> sumTotalPriceWithinMonths(int numberOfMonths);

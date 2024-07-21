@@ -31,7 +31,6 @@ public class EvaluationRequestDTO {
   String requestEmail;
   @NotBlank
   String guestName;
-
   String status;
   @NotBlank
   String service;
