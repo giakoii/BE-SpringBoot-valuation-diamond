@@ -1,11 +1,8 @@
 package org.swp391.valuationdiamond;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.swp391.valuationdiamond.service.EvaluationRequestServiceImp;
 
 import java.util.TimeZone;
 

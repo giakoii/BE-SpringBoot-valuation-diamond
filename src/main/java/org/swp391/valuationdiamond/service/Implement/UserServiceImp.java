@@ -1,4 +1,4 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -21,6 +21,7 @@ import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.entity.primary.User;
 import org.swp391.valuationdiamond.repository.primary.PendingUserRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
+import org.swp391.valuationdiamond.service.Interface.IUserService;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -45,41 +46,41 @@ public class UserServiceImp implements IUserService {
     }
 
     @NonFinal
-    public static final String  SIGNER_KEY = "loJB7k9HBo3Fm3spN+I7TV5Dkx8OyznG2cnitNEX2rvKGi82q4OnhDzhv3EZkXSA";
+    public static final String SIGNER_KEY = "loJB7k9HBo3Fm3spN+I7TV5Dkx8OyznG2cnitNEX2rvKGi82q4OnhDzhv3EZkXSA";
 
 
     //=============================== Các hàm liên quan tới tạo, login ==========================================
     @Override
     public void createUser(UserDTO userDTO) throws MessagingException {
         try {
-        if (userRepository.findByUserId(userDTO.getUserId()) != null || pendingUserRepository.findByUserId(userDTO.getUserId()) != null){
-            throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
-        }
-        if (userRepository.findByEmail(userDTO.getEmail()) != null || pendingUserRepository.findByEmail(userDTO.getEmail()) != null){
-            throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
-        }
+            if (userRepository.findByUserId(userDTO.getUserId()) != null || pendingUserRepository.findByUserId(userDTO.getUserId()) != null) {
+                throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
+            }
+            if (userRepository.findByEmail(userDTO.getEmail()) != null || pendingUserRepository.findByEmail(userDTO.getEmail()) != null) {
+                throw new IllegalArgumentException("User with email " + userDTO.getEmail() + " already exists");
+            }
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-        PendingUser pendingUser = PendingUser.builder()
-                .userId(userDTO.getUserId())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .email(userDTO.getEmail())
-                .birthday(userDTO.getBirthday())
-                .phoneNumber(userDTO.getPhoneNumber())
-                .address(userDTO.getAddress())
-                .role(Role.valueOf(userDTO.getRole()))
-                .build();
+            PendingUser pendingUser = PendingUser.builder()
+                    .userId(userDTO.getUserId())
+                    .password(passwordEncoder.encode(userDTO.getPassword()))
+                    .firstName(userDTO.getFirstName())
+                    .lastName(userDTO.getLastName())
+                    .email(userDTO.getEmail())
+                    .birthday(userDTO.getBirthday())
+                    .phoneNumber(userDTO.getPhoneNumber())
+                    .address(userDTO.getAddress())
+                    .role(Role.valueOf(userDTO.getRole()))
+                    .build();
 
-        String otp = generateOtp();
-        pendingUser.setOtp(otp);
-        pendingUser.setOtpCreationTime(LocalDateTime.now());
+            String otp = generateOtp();
+            pendingUser.setOtp(otp);
+            pendingUser.setOtpCreationTime(LocalDateTime.now());
 
-        pendingUserRepository.save(pendingUser);
+            pendingUserRepository.save(pendingUser);
 
-        sendOtpEmail(userDTO.getEmail(), otp);
+            sendOtpEmail(userDTO.getEmail(), otp);
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while creating user", e);
         }
@@ -88,9 +89,9 @@ public class UserServiceImp implements IUserService {
     //hàm tạo account cho staff
     @Override
     public User createStaff(UserDTO userDTO) {
-            if (userRepository.findByUserId(userDTO.getUserId()) != null) {
-                throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
-            }
+        if (userRepository.findByUserId(userDTO.getUserId()) != null) {
+            throw new IllegalArgumentException("User with ID " + userDTO.getUserId() + " already exists");
+        }
         try {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -115,17 +116,16 @@ public class UserServiceImp implements IUserService {
 
     //change password
     @Override
-    public User changePassword(String userId, String oldPassword, String newPassword){
+    public User changePassword(String userId, String oldPassword, String newPassword) {
         User user = userRepository.findByUserId(userId);
-        if(user == null){
+        if (user == null) {
             throw new RuntimeException("User not found");
         }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        if(passwordEncoder.matches(oldPassword, user.getPassword())){
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
             return userRepository.save(user);
-        }
-        else {
+        } else {
             throw new RuntimeException("Password is incorrect");
         }
     }
@@ -239,6 +239,7 @@ public class UserServiceImp implements IUserService {
     public List<User> getStaffByRoleEvaluationStaff() {
         return userRepository.findByStatusAndRole(Status.ENABLE, Role.valuation_staff);
     }
+
     @Override
     public List<User> getStaff() {
         List<User> staff = new ArrayList<>();
@@ -248,6 +249,7 @@ public class UserServiceImp implements IUserService {
 
         return staff;
     }
+
     @Override
     public User getStaffById(String id) {
         User user = userRepository.findById(id)
@@ -257,6 +259,7 @@ public class UserServiceImp implements IUserService {
         }
         throw new RuntimeException("Staff is disabled");
     }
+
     @Override
     public User getAUser(String id) {
         User user = userRepository.findById(id)
@@ -266,54 +269,57 @@ public class UserServiceImp implements IUserService {
         }
         throw new RuntimeException("User is disabled");
     }
+
     @Override
     public List<User> getCustomers() {
         return userRepository.findByStatusAndRole(Status.ENABLE, Role.customer);
     }
+
     //=============================== Các hàm UPDATE và DELETE ==========================================
     @Override
-    public User updateUser(String userId, UserDTO userDTO){
-           User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-           if (user.getStatus() != Status.ENABLE) {
+    public User updateUser(String userId, UserDTO userDTO) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getStatus() != Status.ENABLE) {
             throw new RuntimeException("User is DISABLE");
         }
         try {
-           PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-           if (userDTO.getPassword() != null) {
-               user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-           }
-           if (userDTO.getFirstName() != null) {
-               user.setFirstName(userDTO.getFirstName());
-           }
-           if (userDTO.getLastName() != null) {
-               user.setLastName(userDTO.getLastName());
-           }
-           if (userDTO.getBirthday() != null) {
-               user.setBirthday(userDTO.getBirthday());
-           }
-           if (userDTO.getPhoneNumber() != null) {
-               user.setPhoneNumber(userDTO.getPhoneNumber());
-           }
-           if (userDTO.getEmail() != null) {
-               user.setEmail(userDTO.getEmail());
-           }
-           if (userDTO.getAddress() != null) {
-               user.setAddress(userDTO.getAddress());
-           }
-           if (userDTO.getRole() != null) {
-               user.setRole(Role.valueOf(userDTO.getRole()));
-           }
-           if(userDTO.getStatus() != null){
-               user.setStatus(Status.valueOf(userDTO.getStatus()));
-           }
-           return userRepository.save(user);
-       } catch (Exception e) {
-           throw new RuntimeException("An error occurred while updating the user", e);
-       }
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            if (userDTO.getPassword() != null) {
+                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            }
+            if (userDTO.getFirstName() != null) {
+                user.setFirstName(userDTO.getFirstName());
+            }
+            if (userDTO.getLastName() != null) {
+                user.setLastName(userDTO.getLastName());
+            }
+            if (userDTO.getBirthday() != null) {
+                user.setBirthday(userDTO.getBirthday());
+            }
+            if (userDTO.getPhoneNumber() != null) {
+                user.setPhoneNumber(userDTO.getPhoneNumber());
+            }
+            if (userDTO.getEmail() != null) {
+                user.setEmail(userDTO.getEmail());
+            }
+            if (userDTO.getAddress() != null) {
+                user.setAddress(userDTO.getAddress());
+            }
+            if (userDTO.getRole() != null) {
+                user.setRole(Role.valueOf(userDTO.getRole()));
+            }
+            if (userDTO.getStatus() != null) {
+                user.setStatus(Status.valueOf(userDTO.getStatus()));
+            }
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while updating the user", e);
+        }
     }
+
     @Override
     public boolean deleteUser(String userId) {
-        User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         if (user == null) {
             throw new RuntimeException("User not found");
         }
@@ -324,7 +330,7 @@ public class UserServiceImp implements IUserService {
 
     //=============================== Các hàm liên quan tới OTP và JWT ==========================================
     //jwt
-    private String generateJwtToken(String userId){
+    private String generateJwtToken(String userId) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -348,7 +354,7 @@ public class UserServiceImp implements IUserService {
     }
 
     //hàm send otp
-    public void sendOtpEmail(String email){
+    public void sendOtpEmail(String email) {
         String opt = generateOtp();
         try {
             sendOtpEmail(email, opt);
@@ -358,7 +364,7 @@ public class UserServiceImp implements IUserService {
 
     }
 
-    private String generateOtp(){
+    private String generateOtp() {
         SecureRandom random = new SecureRandom();
         int otp = 100001 + random.nextInt(900000);
         return String.valueOf(otp);
@@ -382,7 +388,7 @@ public class UserServiceImp implements IUserService {
 
     //delete PendingUser
     @Override
-    public boolean deletePendingUser(String userId){
+    public boolean deletePendingUser(String userId) {
         PendingUser pendingUser = pendingUserRepository.findByUserId(userId);
         if (pendingUser == null) {
             throw new RuntimeException("User not found");
@@ -390,6 +396,7 @@ public class UserServiceImp implements IUserService {
         pendingUserRepository.delete(pendingUser);
         return true;
     }
+
     public static class UserCountResponse {
         private long totalUser;
 
@@ -412,11 +419,11 @@ public class UserServiceImp implements IUserService {
                     '}';
         }
     }
+
     @Override
     public long countUsers() {
         return userRepository.count();
     }
-
 
 
 }

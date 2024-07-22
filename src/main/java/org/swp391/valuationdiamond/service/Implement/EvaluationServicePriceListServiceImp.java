@@ -1,4 +1,4 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,12 +7,11 @@ import org.swp391.valuationdiamond.entity.primary.EvaluationService;
 import org.swp391.valuationdiamond.entity.primary.EvaluationServicePriceList;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServicePriceListReponsitory;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServiceRepository;
+import org.swp391.valuationdiamond.service.Interface.IEvaluationServicePriceListService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EvaluationServicePriceListServiceImp implements IEvaluationServicePriceListService {
@@ -29,17 +28,17 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     @Override
     public EvaluationServicePriceList createServicePriceList(EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
 
-            long count = evaluationServicePriceListRepository.count();
-            String formattedCount = String.valueOf(count + 1);
-            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-            String servicePriceList = "ESPL" + date + formattedCount;
+        long count = evaluationServicePriceListRepository.count();
+        String formattedCount = String.valueOf(count + 1);
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+        String servicePriceList = "ESPL" + date + formattedCount;
 
-            if (evaluationServicePriceListDTO.getSizeFrom() >= evaluationServicePriceListDTO.getSizeTo()) {
-                throw new IllegalArgumentException("Size from must be less than size to");
-            }
+        if (evaluationServicePriceListDTO.getSizeFrom() >= evaluationServicePriceListDTO.getSizeTo()) {
+            throw new IllegalArgumentException("Size from must be less than size to");
+        }
 
-            EvaluationService evaluationService = evaluationServiceRepository.findById(evaluationServicePriceListDTO.getServiceId()).orElseThrow(() -> new RuntimeException("Service not found"));
-            try {
+        EvaluationService evaluationService = evaluationServiceRepository.findById(evaluationServicePriceListDTO.getServiceId()).orElseThrow(() -> new RuntimeException("Service not found"));
+        try {
             EvaluationServicePriceList evaluationServicePriceList = EvaluationServicePriceList.builder()
                     .priceList(servicePriceList)
                     .initPrice(evaluationServicePriceListDTO.getInitPrice())
@@ -100,10 +99,10 @@ public class EvaluationServicePriceListServiceImp implements IEvaluationServiceP
     //UPDATE PRICE LIST BY SERVICE ID
     @Override
     public List<EvaluationServicePriceList> updateServicePriceListByServiceId(String serviceId, EvaluationServicePriceListDTO evaluationServicePriceListDTO) {
-            List<EvaluationServicePriceList> evaluationServicePriceLists = evaluationServicePriceListRepository.findByServiceId(evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found")));
+        List<EvaluationServicePriceList> evaluationServicePriceLists = evaluationServicePriceListRepository.findByServiceId(evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found")));
 
-            EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found"));
-            EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findByServiceId(evaluationService).stream().findFirst().orElseThrow(() -> new RuntimeException("Price list not found with " + serviceId + " service id"));
+        EvaluationService evaluationService = evaluationServiceRepository.findById(serviceId).orElseThrow(() -> new RuntimeException("Service not found"));
+        EvaluationServicePriceList evaluationServicePriceList = evaluationServicePriceListRepository.findByServiceId(evaluationService).stream().findFirst().orElseThrow(() -> new RuntimeException("Price list not found with " + serviceId + " service id"));
         try {
             if (evaluationServicePriceListDTO.getSizeFrom() != null) {
                 evaluationServicePriceList.setSizeFrom(evaluationServicePriceListDTO.getSizeFrom());

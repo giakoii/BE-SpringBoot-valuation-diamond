@@ -1,4 +1,4 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.swp391.valuationdiamond.service.Interface.IDiamondPriceServiceDB2;
 
 @Service
 public class DiamondPriceServiceDB2 implements IDiamondPriceServiceDB2 {

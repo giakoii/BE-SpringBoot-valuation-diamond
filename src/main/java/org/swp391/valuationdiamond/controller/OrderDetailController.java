@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.OrderDetailDTO;
 import org.swp391.valuationdiamond.entity.primary.OrderDetail;
-import org.swp391.valuationdiamond.service.OrderDetailServiceImp;
+import org.swp391.valuationdiamond.service.Implement.OrderDetailServiceImp;
 
 import java.util.List;
 
@@ -13,7 +13,8 @@ import java.util.List;
 public class OrderDetailController {
     @Autowired
     private OrderDetailServiceImp orderDetailServiceImp;
-//    @PostMapping ("/create")
+
+    //    @PostMapping ("/create")
 //    OrderDetail createOrderDetail(@RequestBody OrderDetailDTO orderDetailDTO){
 //        return orderDetailServiceImp.createOrderDetail(orderDetailDTO);
 //    }
@@ -29,14 +30,16 @@ public class OrderDetailController {
 //    }
     //tìm by order detail Id
     @GetMapping("/getOrderDe/{orderDetailId}")
-    OrderDetail getOrderDetailId(@PathVariable("orderDetailId") String orderDetailId){
+    OrderDetail getOrderDetailId(@PathVariable("orderDetailId") String orderDetailId) {
         return orderDetailServiceImp.getOrderDetailId(orderDetailId);
     }
-    @PutMapping ("/getOrderDe/{orderDetailId}")
-    OrderDetail updateOrderDe(@PathVariable("orderDetailId") String orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO){
+
+    @PutMapping("/getOrderDe/{orderDetailId}")
+    OrderDetail updateOrderDe(@PathVariable("orderDetailId") String orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO) {
         return orderDetailServiceImp.updateOrderDeStatus(orderDetailId, orderDetailDTO);
     }
-//    @GetMapping("/getOrderDetail/{orderId}")
+
+    //    @GetMapping("/getOrderDetail/{orderId}")
 //    public OrderDetail findOrderDetailList(@PathVariable("orderId") String orderId) {
 //        return orderDetailServiceImp.findOrderDetailList(orderId);
 //    }
@@ -53,38 +56,42 @@ public class OrderDetailController {
 
     //hàm get all
     @GetMapping("/getOrderDetails")
-    public List<OrderDetail> getOrderDetails(){
+    public List<OrderDetail> getOrderDetails() {
         return orderDetailServiceImp.getAllOrderDetail();
     }
 
-    @PutMapping ("/getOrderDeEvaluationStaff/{orderDetailId}")
-    OrderDetail updateOrderDeEvaluationStaff(@PathVariable("orderDetailId") String orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO){
+    @PutMapping("/getOrderDeEvaluationStaff/{orderDetailId}")
+    OrderDetail updateOrderDeEvaluationStaff(@PathVariable("orderDetailId") String orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO) {
         return orderDetailServiceImp.updateOrderDeEvaluationStaff(orderDetailId, orderDetailDTO);
     }
 
     //hafm get staff == null
     @GetMapping("/getOrderDetailByEvaluationStaffIsNull")
-    public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull(){
+    public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull() {
         return orderDetailServiceImp.getOrderDetailByEvaluationStaffIsNull();
     }
+
     @PutMapping("/update_isdiamond/{orderDetailId}")
     public OrderDetail updateOrderDeIsDiamond(@PathVariable("orderDetailId") String orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO) {
         return orderDetailServiceImp.updateOrderDeIsDiamond(orderDetailId, orderDetailDTO);
     }
+
     @PutMapping("updateAllOD/{orderDetailId}")
     public OrderDetail updateOrderDetail(@PathVariable("orderDetailId") String orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO) {
         return orderDetailServiceImp.updateOrderDetail(orderDetailId, orderDetailDTO);
     }
+
     @GetMapping("/getOrderDetailByEvaluationStaffId/{evaluationStaffId}")
-    public List<OrderDetail> getOrderDetailsByEvaluationStaffId(@PathVariable("evaluationStaffId") String evaluationStaffId){
+    public List<OrderDetail> getOrderDetailsByEvaluationStaffId(@PathVariable("evaluationStaffId") String evaluationStaffId) {
         return orderDetailServiceImp.getOrderDetailByEvaluationStaffId(evaluationStaffId);
     }
 
     @GetMapping("/countOrderDetailWithEvaluationStaffIdIsNull")
-    public OrderDetailServiceImp.OrderDetailCountResponse getOrderDetailWithEvaluationStaffIdIsNull(){
+    public OrderDetailServiceImp.OrderDetailCountResponse getOrderDetailWithEvaluationStaffIdIsNull() {
         long OrderDetailWithEvaluationStaffIdIsNull = orderDetailServiceImp.countByEvaluationStaffIdIsNull();
         return new OrderDetailServiceImp.OrderDetailCountResponse(OrderDetailWithEvaluationStaffIdIsNull);
     }
+
     // New endpoint to get order details with evaluation staff null and status In_Progress
     @GetMapping("/getOrderDetailsByEvalStaffNullAndStatusInProgress")
     public List<OrderDetail> getOrderDetailsByEvaluationStaffIsNullAndStatusInProgress() {

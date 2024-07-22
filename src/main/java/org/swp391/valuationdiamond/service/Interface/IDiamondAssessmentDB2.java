@@ -1,4 +1,4 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Interface;
 
 import org.swp391.valuationdiamond.entity.secondary.DiamondAssessmentDB2;
 

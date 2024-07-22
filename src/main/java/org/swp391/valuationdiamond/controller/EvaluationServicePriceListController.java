@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.EvaluationServicePriceListDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationServicePriceList;
-import org.swp391.valuationdiamond.service.IEvaluationServicePriceListService;
+import org.swp391.valuationdiamond.service.Interface.IEvaluationServicePriceListService;
 
 import java.util.List;
 

@@ -24,19 +24,27 @@ import org.swp391.valuationdiamond.config.CustomDateDeserializer;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EvaluationRequestDTO {
   String requestDescription;
+
   @JsonDeserialize(using = CustomDateDeserializer.class)
   @DateTimeFormat(pattern = "MM/dd/yyyy, HH:mm")
   Date requestDate;
+
   @NotBlank
   String requestEmail;
+
   @NotBlank
   String guestName;
+
   String status;
+
   @NotBlank
   String service;
+
   @NotBlank
   String phoneNumber;
+
   String userId;
+
   @JsonDeserialize(using = CustomDateDeserializer.class)
   @DateTimeFormat(pattern = "MM/dd/yyyy, HH:mm")
   Date meetingDate;

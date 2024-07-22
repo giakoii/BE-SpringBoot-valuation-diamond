@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.EvaluationServiceDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationService;
-import org.swp391.valuationdiamond.service.EvaluationServiceServiceImp;
+import org.swp391.valuationdiamond.service.Implement.EvaluationServiceServiceImp;
 
 import java.util.List;
 
@@ -44,8 +44,9 @@ public class EvaluationServiceController {
     List<EvaluationService> getServices() {
         return evaluationServiceServiceImp.getServices();
     }
+
     @GetMapping("/getServiceAdmin")
-    List<EvaluationService> getAllServices(){
+    List<EvaluationService> getAllServices() {
         return evaluationServiceServiceImp.getAllServices();
     }
 }

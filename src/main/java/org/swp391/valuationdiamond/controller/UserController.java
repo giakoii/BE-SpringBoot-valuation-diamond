@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.UserDTO;
 import org.swp391.valuationdiamond.entity.primary.User;
-import org.swp391.valuationdiamond.service.OrderDetailServiceImp;
-import org.swp391.valuationdiamond.service.UserServiceImp;
+import org.swp391.valuationdiamond.service.Implement.OrderDetailServiceImp;
+import org.swp391.valuationdiamond.service.Implement.UserServiceImp;
 
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class UserController {
 
     //hàm đăng ký thông thường
     @PostMapping("/create")
-     String createCustomer(@Valid @RequestBody UserDTO userDTO) throws MessagingException {
+    String createCustomer(@Valid @RequestBody UserDTO userDTO) throws MessagingException {
         userServiceImp.createUser(userDTO);
         return "Đăng ký thành công, vui lòng kiểm tra email để xác nhận tài khoản";
     }
@@ -43,6 +42,7 @@ public class UserController {
     public User createStaff(@Valid @RequestBody UserDTO userDTO) {
         return userServiceImp.createStaff(userDTO);
     }
+
     //hàm change password
     @PostMapping("/change-password")
     User changePassword(@RequestBody Map<String, String> request) {
@@ -51,6 +51,7 @@ public class UserController {
         String newPassword = request.get("newPassword");
         return userServiceImp.changePassword(userId, oldPassword, newPassword);
     }
+
     //
     @PostMapping("/confirm-email")
     public ResponseEntity<?> confirmEmail(@RequestBody Map<String, String> request) {
@@ -89,32 +90,34 @@ public class UserController {
 
     // API get user by userId
     @GetMapping("/getUser/{userId}")
-    User getStaff(@PathVariable("userId") String userId){
+    User getStaff(@PathVariable("userId") String userId) {
 
         return userServiceImp.getStaffById(userId);
     }
+
     @GetMapping("/getStaff")
-    List<User> getStaffs(){
+    List<User> getStaffs() {
 
         return userServiceImp.getStaffByRoleEvaluationStaff();
     }
+
     // API get all staffs
     @GetMapping("/getAllStaff")
-    List<User> getAllStaffs(){
+    List<User> getAllStaffs() {
 
         return userServiceImp.getStaff();
     }
 
     // API get all customers
     @GetMapping("/getCustomer")
-    List<User> getCustomer(){
+    List<User> getCustomer() {
 
         return userServiceImp.getCustomers();
     }
 
     // API get a user by userId
     @GetMapping("/getAUser/{userId}")
-        User getAUser(@PathVariable("userId") String userId ) {
+    User getAUser(@PathVariable("userId") String userId) {
 
         return userServiceImp.getAUser(userId);
     }
@@ -136,14 +139,15 @@ public class UserController {
 
     // =================================== API DELETE ======================================
     @DeleteMapping("/deleteUser/{userId}")
-    public boolean deleteUser(@PathVariable("userId") String userId){
+    public boolean deleteUser(@PathVariable("userId") String userId) {
         return userServiceImp.deleteUser(userId);
     }
 
     @DeleteMapping("/deletePendingUser/{userId}")
-    public boolean deletePendingUser(@PathVariable("userId") String userId){
+    public boolean deletePendingUser(@PathVariable("userId") String userId) {
         return userServiceImp.deletePendingUser(userId);
     }
+
     // Number only
     @GetMapping("/countUsers")
     public long countUsers() {

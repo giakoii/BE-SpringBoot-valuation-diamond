@@ -1,6 +1,5 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
-import com.nimbusds.jose.jwk.Curve;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.dto.OrderDetailDTO;
@@ -9,6 +8,7 @@ import org.swp391.valuationdiamond.repository.primary.EvaluationServiceRepositor
 import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
+import org.swp391.valuationdiamond.service.Interface.IOrderDetailService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +106,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
     public List<OrderDetail> getOrderDetailByEvaluationStaffIsNull() {
         return orderDetailRepository.findByEvaluationStaffIdIsNull();
     }
+
     // get function
     @Override
     public List<OrderDetail> getOrderDetailsByEvaluationStaffIsNullAndStatusInProgress() {
@@ -138,7 +139,7 @@ public class OrderDetailServiceImp implements IOrderDetailService {
     @Override
     public OrderDetail updateOrderDetail(String orderDetailId, OrderDetailDTO orderDetailDTO) {
 
-            OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order detail not found"));
+        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new RuntimeException("Order detail not found"));
         try {
             // Update properties from DTO only if they are not null
             if (orderDetailDTO.getOrderDetailId() != null) {

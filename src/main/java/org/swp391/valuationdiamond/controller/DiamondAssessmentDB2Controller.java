@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.swp391.valuationdiamond.entity.secondary.DiamondAssessmentDB2;
 
-import org.swp391.valuationdiamond.service.DiamondAssessmentServiceDB2;
+import org.swp391.valuationdiamond.service.Implement.DiamondAssessmentServiceDB2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

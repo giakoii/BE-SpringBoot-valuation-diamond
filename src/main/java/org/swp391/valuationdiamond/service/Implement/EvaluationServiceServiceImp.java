@@ -1,19 +1,17 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.dto.EvaluationServiceDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationService;
-import org.swp391.valuationdiamond.entity.primary.EvaluationServicePriceList;
-import org.swp391.valuationdiamond.entity.primary.OrderDetail;
 import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServicePriceListReponsitory;
 import org.swp391.valuationdiamond.repository.primary.EvaluationServiceRepository;
 import org.swp391.valuationdiamond.repository.primary.OrderDetailRepository;
+import org.swp391.valuationdiamond.service.Interface.IEvaluationServiceService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -62,7 +60,7 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
             if (evaluationServiceDTO.getServiceDescription() != null) {
                 evaluationService.setServiceDescription(evaluationServiceDTO.getServiceDescription());
             }
-            if(evaluationServiceDTO.getStatus() != null){
+            if (evaluationServiceDTO.getStatus() != null) {
                 evaluationService.setStatus(Status.valueOf(evaluationServiceDTO.getStatus()));
             }
             return evaluationServiceRepository.save(evaluationService);
@@ -86,6 +84,7 @@ public class EvaluationServiceServiceImp implements IEvaluationServiceService {
         }
         throw new RuntimeException("Service is disabled");
     }
+
     @Override
     public List<EvaluationService> getAllServices() {
         return evaluationServiceRepository.findAll();

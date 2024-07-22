@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.swp391.valuationdiamond.dto.OrderDTO;
 import org.swp391.valuationdiamond.entity.primary.Order;
-import org.swp391.valuationdiamond.service.OrderServiceImp;
+import org.swp391.valuationdiamond.service.Implement.OrderServiceImp;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,7 +63,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/deleteOrder/{orderId}")
-    public boolean deleteOrder(@PathVariable("orderId") String orderId){
+    public boolean deleteOrder(@PathVariable("orderId") String orderId) {
         return orderServiceImp.deleteOrder(orderId);
     }
 
@@ -73,6 +72,7 @@ public class OrderController {
             @RequestParam(value = "numberOfMonths", required = false, defaultValue = "1") Integer numberOfMonths) {
         return orderServiceImp.countOrdersRegisteredPerMonth(numberOfMonths);
     }
+
     @GetMapping("/countOrderCreatedWithin6Months")
     public List<OrderServiceImp.MonthlyOrderCount> countOrderCreatedWithinMonths(
             @RequestParam(value = "numberOfMonths", required = false, defaultValue = "6") Integer numberOfMonths) {
@@ -90,16 +90,19 @@ public class OrderController {
             @RequestParam(value = "numberOfMonths", required = false, defaultValue = "6") Integer numberOfMonths) {
         return orderServiceImp.sumTotalPriceWithinMonths(numberOfMonths);
     }
+
     @GetMapping("/sumQuantityWithinAMonth")
     public List<OrderServiceImp.MonthlyQuantitySum> sumQuantityWithinAMonth(
             @RequestParam(value = "numberOfMonths", required = false, defaultValue = "1") Integer numberOfMonths) {
         return orderServiceImp.sumQuantityWithinMonths(numberOfMonths);
     }
+
     @GetMapping("/sumQuantityWithin6Months")
     public List<OrderServiceImp.MonthlyQuantitySum> sumQuantityWithinMonths(
             @RequestParam(value = "numberOfMonths", required = false, defaultValue = "6") Integer numberOfMonths) {
         return orderServiceImp.sumQuantityWithinMonths(numberOfMonths);
     }
+
     @GetMapping("/compareMonthlyTotalPrice")
     public Map<String, Object> calculatePercentageChange() {
         OrderServiceImp.PercentageChangeResult percentageChangeResult = orderServiceImp.calculatePercentageChange();

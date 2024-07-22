@@ -1,9 +1,10 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Interface;
+
+import org.swp391.valuationdiamond.service.Implement.DiamondPriceServiceDB2;
 
 import java.math.BigDecimal;
 
 public interface IDiamondPriceServiceDB2 {
-
 
 
     BigDecimal getPricePerCarat(String shape, BigDecimal caratWeight, String diamondOrigin);

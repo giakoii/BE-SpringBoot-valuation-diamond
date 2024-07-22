@@ -1,9 +1,7 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.apache.coyote.Request;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,6 +11,7 @@ import org.swp391.valuationdiamond.dto.OrderDTO;
 import org.swp391.valuationdiamond.entity.primary.*;
 
 import org.swp391.valuationdiamond.repository.primary.*;
+import org.swp391.valuationdiamond.service.Interface.IOrderService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -125,10 +124,12 @@ public class OrderServiceImp implements IOrderService {
 
         return orderRepository.findOrderByStatus(Status.In_Progress);
     }
+
     @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
+
     @Override
     public Order getOrder(String id) {
         return orderRepository.findById(id)
@@ -159,6 +160,7 @@ public class OrderServiceImp implements IOrderService {
         }
         return orderList;
     }
+
     //===============================================Methods Update Order ===============================================
     @Override
     public Order updateOrderStatus(String orderId, OrderDTO orderDTO) throws MessagingException {
@@ -187,29 +189,33 @@ public class OrderServiceImp implements IOrderService {
         return true;
     }
 
-//Count order
-public class MonthlyOrderCount {
-    private int month;
-    private long count;
+    //Count order
+    public class MonthlyOrderCount {
+        private int month;
+        private long count;
 
-    public MonthlyOrderCount(int month, long count) {
-        this.month = month;
-        this.count = count;
+        public MonthlyOrderCount(int month, long count) {
+            this.month = month;
+            this.count = count;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public long getCount() {
+            return count;
+        }
+
+        @Override
+        public String toString() {
+            return "MonthlyOrderCount{" +
+                    "month=" + month +
+                    ", count=" + count +
+                    '}';
+        }
     }
-    public int getMonth() {
-        return month;
-    }
-    public long getCount() {
-        return count;
-    }
-    @Override
-    public String toString() {
-        return "MonthlyOrderCount{" +
-                "month=" + month +
-                ", count=" + count +
-                '}';
-    }
-}
+
     @Override
     public List<MonthlyOrderCount> countOrdersRegisteredPerMonth(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
@@ -263,6 +269,7 @@ public class MonthlyOrderCount {
 
         return totalPriceSum;
     }
+
     public BigDecimal sumTotalPricePreviousMonth() {
         YearMonth yearMonth = YearMonth.now().minusMonths(1);
         LocalDate startDate = yearMonth.atDay(1);
@@ -288,17 +295,17 @@ public class MonthlyOrderCount {
     }
 
     //Hàm này gửi tin nhắn đã định giá xong tới email của khách hàng
-    private void sendMessageToEmail(String email,String name, String orderId) throws MessagingException {
+    private void sendMessageToEmail(String email, String name, String orderId) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(email);
         helper.setSubject("Message");
 
-        String text = "Dear User" + name + ",\n\n"
-                + "Your order of you is "+ orderId + " is Completed,\n"
+        String text = "Dear " + name + ",\n\n"
+                + "Your order of you is " + orderId + " is Completed,\n"
                 + "Please come pick it up within 30 days.\n\n"
                 + "Best regards,\n\n"
-                + "Valuation Diamond";
+                + "Valuation Diamond.";
         helper.setText(text);
 
         javaMailSender.send(message);
@@ -336,6 +343,7 @@ public class MonthlyOrderCount {
             this.percentageChange = percentageChange;
         }
     }
+
     @Override
     public PercentageChangeResult calculatePercentageChange() {
         BigDecimal totalPriceCurrentMonth = sumTotalPriceWithinAMonth();
@@ -356,6 +364,7 @@ public class MonthlyOrderCount {
 
         return result;
     }
+
     public class MonthlyTotalPrice {
         private int month;
         private BigDecimal totalPrice;
@@ -381,6 +390,7 @@ public class MonthlyOrderCount {
                     '}';
         }
     }
+
     @Override
     public List<MonthlyTotalPrice> sumTotalPriceWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();
@@ -414,6 +424,7 @@ public class MonthlyOrderCount {
                 })
                 .collect(Collectors.toList());
     }
+
     public class MonthlyQuantitySum {
         private int month;
         private int totalQuantity;
@@ -439,6 +450,7 @@ public class MonthlyOrderCount {
                     '}';
         }
     }
+
     @Override
     public List<MonthlyQuantitySum> sumQuantityWithinMonths(int numberOfMonths) {
         YearMonth currentYearMonth = YearMonth.now();

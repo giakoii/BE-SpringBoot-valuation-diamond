@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.swp391.valuationdiamond.dto.CommittedPaperDTO;
 import org.swp391.valuationdiamond.entity.primary.CommittedPaper;
-import org.swp391.valuationdiamond.service.CommittedPaperServiceImp;
+import org.swp391.valuationdiamond.service.Implement.CommittedPaperServiceImp;
 
 import java.util.List;
 
@@ -15,20 +15,28 @@ import java.util.List;
 public class CommittedPaperController {
     @Autowired
     CommittedPaperServiceImp committedPaperServiceImp;
+
+
+    //===================================== CREATE COMMITTED PAPER =====================================
     @PostMapping("/create")
     CommittedPaper createCommittedPaper(@RequestBody CommittedPaperDTO committedPaperDTO) {
         return committedPaperServiceImp.createCommittedPaper(committedPaperDTO);
     }
+
+
+    //===================================== GET COMMITTED PAPER =====================================
     @GetMapping("/getCommittedPaper")
-    List<CommittedPaper> getCommittedPaper (){
+    List<CommittedPaper> getCommittedPaper() {
         {
             return committedPaperServiceImp.getAllCommittedPaper();
         }
     }
+
     @GetMapping("/getCommittedPaper/{committedId}")
     CommittedPaper getCommittedPaper(@PathVariable String committedId) {
         return committedPaperServiceImp.getCommittedPaper(committedId);
     }
+
     @GetMapping("/getCommittedPaperByUserId/{userId}")
     public List<CommittedPaper> getCommittedPaperByUserId(@PathVariable("userId") String userId) {
         try {
@@ -38,7 +46,8 @@ public class CommittedPaperController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while fetching the evaluation results");
         }
-}
+    }
+
     @GetMapping("/getCommittedPaperByOrderId/{orderId}")
     public CommittedPaper getCommittedPaperByOrderId(@PathVariable("orderId") String orderId) {
         try {
@@ -49,4 +58,5 @@ public class CommittedPaperController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while fetching the evaluation results");
         }
     }
+
 }

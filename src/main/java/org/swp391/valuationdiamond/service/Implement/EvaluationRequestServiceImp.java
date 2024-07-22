@@ -1,4 +1,4 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,6 +15,7 @@ import org.swp391.valuationdiamond.entity.primary.Status;
 import org.swp391.valuationdiamond.entity.primary.User;
 import org.swp391.valuationdiamond.repository.primary.EvaluationRequestRepository;
 import org.swp391.valuationdiamond.repository.primary.UserRepository;
+import org.swp391.valuationdiamond.service.Interface.IEvaluationRequestService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,24 +38,24 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
         long count = evaluationRequestRepository.count();
         String formattedCount = String.valueOf(count + 1);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-        String requestId = "ER"+ date + formattedCount ;
+        String requestId = "ER" + date + formattedCount;
         try {
-        EvaluationRequest evaluationRequest = EvaluationRequest.builder()
-                .requestId(requestId)
-                .requestDescription(evaluationRequestDTO.getRequestDescription())
-                .requestDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
-                .requestEmail(evaluationRequestDTO.getRequestEmail())
-                .guestName(evaluationRequestDTO.getGuestName())
-                .status("Requesting")
-                .service(evaluationRequestDTO.getService())
-                .phoneNumber(evaluationRequestDTO.getPhoneNumber())
-                .meetingDate(evaluationRequestDTO.getMeetingDate())
-                .build();
+            EvaluationRequest evaluationRequest = EvaluationRequest.builder()
+                    .requestId(requestId)
+                    .requestDescription(evaluationRequestDTO.getRequestDescription())
+                    .requestDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                    .requestEmail(evaluationRequestDTO.getRequestEmail())
+                    .guestName(evaluationRequestDTO.getGuestName())
+                    .status("Requesting")
+                    .service(evaluationRequestDTO.getService())
+                    .phoneNumber(evaluationRequestDTO.getPhoneNumber())
+                    .meetingDate(evaluationRequestDTO.getMeetingDate())
+                    .build();
 
-        User userId = userRepository.findById(evaluationRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        evaluationRequest.setUserId(userId);
+            User userId = userRepository.findById(evaluationRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+            evaluationRequest.setUserId(userId);
 
-        return evaluationRequestRepository.save(evaluationRequest);
+            return evaluationRequestRepository.save(evaluationRequest);
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while creating evaluation request", e);
         }
@@ -102,28 +103,28 @@ public class EvaluationRequestServiceImp implements IEvaluationRequestService {
             throw new RuntimeException("Evaluation Request not found");
         }
         try {
-        if (evaluationRequestDTO.getRequestDescription() != null) {
-            evaluationRequest.setRequestDescription(evaluationRequestDTO.getRequestDescription());
-        }
-        if (evaluationRequestDTO.getRequestEmail() != null) {
-            evaluationRequest.setRequestEmail(evaluationRequestDTO.getRequestEmail());
-        }
-        if (evaluationRequestDTO.getGuestName() != null) {
-            evaluationRequest.setGuestName(evaluationRequestDTO.getGuestName());
-        }
-        if (evaluationRequestDTO.getPhoneNumber() != null) {
-            evaluationRequest.setPhoneNumber(evaluationRequestDTO.getPhoneNumber());
-        }
-        if (evaluationRequestDTO.getService() != null) {
-            evaluationRequest.setService(evaluationRequestDTO.getService());
-        }
-        if (evaluationRequestDTO.getStatus() != null) {
-            evaluationRequest.setStatus(evaluationRequestDTO.getStatus());
-        }
-        if (evaluationRequestDTO.getMeetingDate() != null) {
-            evaluationRequest.setMeetingDate(evaluationRequestDTO.getMeetingDate());
-        }
-        return evaluationRequestRepository.save(evaluationRequest);
+            if (evaluationRequestDTO.getRequestDescription() != null) {
+                evaluationRequest.setRequestDescription(evaluationRequestDTO.getRequestDescription());
+            }
+            if (evaluationRequestDTO.getRequestEmail() != null) {
+                evaluationRequest.setRequestEmail(evaluationRequestDTO.getRequestEmail());
+            }
+            if (evaluationRequestDTO.getGuestName() != null) {
+                evaluationRequest.setGuestName(evaluationRequestDTO.getGuestName());
+            }
+            if (evaluationRequestDTO.getPhoneNumber() != null) {
+                evaluationRequest.setPhoneNumber(evaluationRequestDTO.getPhoneNumber());
+            }
+            if (evaluationRequestDTO.getService() != null) {
+                evaluationRequest.setService(evaluationRequestDTO.getService());
+            }
+            if (evaluationRequestDTO.getStatus() != null) {
+                evaluationRequest.setStatus(evaluationRequestDTO.getStatus());
+            }
+            if (evaluationRequestDTO.getMeetingDate() != null) {
+                evaluationRequest.setMeetingDate(evaluationRequestDTO.getMeetingDate());
+            }
+            return evaluationRequestRepository.save(evaluationRequest);
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while updating the evaluation request", e);
         }

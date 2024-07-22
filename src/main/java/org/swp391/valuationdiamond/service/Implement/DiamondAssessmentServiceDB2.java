@@ -1,10 +1,11 @@
-package org.swp391.valuationdiamond.service;
+package org.swp391.valuationdiamond.service.Implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.swp391.valuationdiamond.entity.secondary.DiamondAssessmentDB2;
 import org.swp391.valuationdiamond.repository.secondary.DiamondAssessmentDB2Repository;
+import org.swp391.valuationdiamond.service.Interface.IDiamondAssessmentDB2;
 import org.swp391.valuationdiamond.specification.DiamondAssessmentSpecification;
 
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class DiamondAssessmentServiceDB2 implements IDiamondAssessmentDB2{
+public class DiamondAssessmentServiceDB2 implements IDiamondAssessmentDB2 {
 
     private static final Logger logger = LoggerFactory.getLogger(DiamondAssessmentServiceDB2.class);
 
@@ -77,6 +78,7 @@ public class DiamondAssessmentServiceDB2 implements IDiamondAssessmentDB2{
             return Collections.emptyList();
         }
     }
+
     public DiamondAssessmentDB2 getDiamondAssessmentById(String assessId) {
         logger.info("Fetching diamond assessment with ID {}", assessId);
         DiamondAssessmentDB2 assessment = diamondAssessmentDB2Repository.findByAssessId(assessId);

@@ -7,22 +7,29 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.swp391.valuationdiamond.dto.EvaluationResultDTO;
 import org.swp391.valuationdiamond.entity.primary.EvaluationResult;
-import org.swp391.valuationdiamond.service.EvaluationResultServiceImp;
+import org.swp391.valuationdiamond.service.Implement.EvaluationResultServiceImp;
+
 import java.util.List;
+
 @RestController
 @RequestMapping("/evaluation_results")
 public class EvaluationResultController {
 
     @Autowired
     private EvaluationResultServiceImp evaluationResultServiceImp;
-    @PostMapping ("/create")
+
+
+    //===================================== CREATE EVALUATION RESULT =====================================
+    @PostMapping("/create")
     EvaluationResult createEvaluationResult(@Valid @RequestBody EvaluationResultDTO evaluationResultDTO) {
         return evaluationResultServiceImp.createEvaluationResult(evaluationResultDTO);
 
     }
+
+    //===================================== GET EVALUATION RESULT =====================================
     @GetMapping("/getEvaluationResults")
-    List<EvaluationResult> getEvaluationResults(){
-            return evaluationResultServiceImp.getAllEvaluationResult();
+    List<EvaluationResult> getEvaluationResults() {
+        return evaluationResultServiceImp.getAllEvaluationResult();
     }
 
     @GetMapping("/getEvaluationResults/{evaluationResultId}")
@@ -40,6 +47,7 @@ public class EvaluationResultController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while fetching the evaluation result");
         }
     }
+
     @GetMapping("/getEvaluationResultsByUserId/{userId}")
     public List<EvaluationResult> getEvaluationResultsByUserId(@PathVariable("userId") String userId) {
         try {
@@ -51,6 +59,9 @@ public class EvaluationResultController {
         }
 
     }
+
+    //===================================== UPDATE EVALUATION RESULT =====================================
+
     @PutMapping("/updateEvaluationResult/{resultId}")
     public EvaluationResult updateResult(@PathVariable("resultId") String resultId, @RequestBody EvaluationResultDTO evaluationResultDTO) {
         return evaluationResultServiceImp.updateResult(resultId, evaluationResultDTO);
